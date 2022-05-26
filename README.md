@@ -29,3 +29,10 @@ The submission (in soft copy) should consist of the following items:
 
 ##### Plagiarism is strictly PROHIBITED. You will be penalized if any of your codes is found online.
 
+### List of thing we need to do:
+```
+Driver class
+Customer class
+Track the time
+Distance calculation
+```
