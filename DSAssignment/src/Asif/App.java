@@ -1,25 +1,27 @@
 package Asif;
 
 import java.util.Scanner;
-import java.util.concurrent.TimeUnit;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 
 public class App {
 
     public static void main(String[] args) {
-        // Setup application start time
-        long startTime = 0;
-        startTime = System.nanoTime();
         
-        try {
-            TimeUnit.SECONDS.sleep(5);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        // Display real world time in HourHourminuteminute format
+        DateTimeFormatter format = DateTimeFormatter.ofPattern("HHmm");
+        LocalTime today = LocalTime.now();
+        String realTime = today.format(format);
+        
+        long realstartTime = Long.parseLong(realTime); // program start real world time
+        
+        // This counts the time since program starts
+        FakeTime time = new FakeTime(realstartTime);
         
         // Home Page
         System.out.println("Welcome to Customer always right E-hailing Application!");
         System.out.println("Options :");
-        System.out.println("Current time : " + TimeElapsed(startTime));
+        System.out.println("Current time : " + realTime);
         
         // Ask for user input
         Scanner sc = new Scanner(System.in);
@@ -36,6 +38,7 @@ public class App {
         }
         
         if (s.equals("A")) {
+            System.out.println(time.currentTime());
             System.out.println("System dashboard");
         }
         else if (s.equals("B")) {
@@ -44,12 +47,5 @@ public class App {
         else {
             System.out.println("Driver overview");
         }
-    }
-    
-    public static long TimeElapsed(long startTime) {
-        long endTime = System.nanoTime();
-        long elapsedTime = endTime - startTime;
-        
-        return elapsedTime;
     }
 }
