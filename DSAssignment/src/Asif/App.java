@@ -21,7 +21,7 @@ public class App {
         // Home Page
         System.out.println("Welcome to Customer always right E-hailing Application!");
         System.out.println("Options :");
-        System.out.println("Current time : " + realTime);
+        System.out.printf("Current time : %04d\n", realstartTime);
         
         // Ask for user input
         Scanner sc = new Scanner(System.in);
@@ -37,8 +37,9 @@ public class App {
                 break;
         }
         
+        // Open menu according to input
         if (s.equals("A")) {
-            System.out.println(time.currentTime());
+            System.out.printf("%04d\n", time.currentTime());
             System.out.println("System dashboard");
         }
         else if (s.equals("B")) {
