@@ -48,5 +48,8 @@ public class App {
         else {
             System.out.println("Driver overview");
         }
+        
+        System.out.println(time.convToTFormat(360));
+        System.out.println(time.convToSeconds(921));
     }
 }
