@@ -33,6 +33,6 @@ The submission (in soft copy) should consist of the following items:
 ```
 Driver class
 Customer class
-Track the time
+~~Track the time~~
 Distance calculation
 ```
