@@ -27,18 +27,28 @@ public class FakeTime {
         long time;
         
         time = convToSeconds(realStartTime) + elapsedTime();
+        // Reset time after each day
+        if (time >= 1440) {
+            time = time % 1440;
+        }
         time = convToFormat(time);
         
         return time;
     }
     
+    //public long timeDifference() {
+        
+    //}
+    
     // Convert the time format (HHmm) in the main program to seconds (1s = 1min)
     public long convToSeconds(long time) {
         long seconds;
         long[] digits = new long[4];
-        long hours = 0, minutes = 0;
+        long hours, minutes; // These are actually minutes and seconds respectively
        
+        // To check the number of digits
         if ((time / 1000) != 0) {
+            // If 4 digits
             for (int i = 0; i < 4; i++) {
                 digits[i] = time % 10;
                 time = time / 10;
@@ -48,6 +58,7 @@ public class FakeTime {
             hours = digits[2] + (digits[3] * 10);
         }
         else {
+            // If 3 digits
             for (int i = 0; i < 3; i++) {
                 digits[i] = time % 10;
                 time = time / 10;
@@ -66,8 +77,8 @@ public class FakeTime {
     public long convToFormat(long seconds) {
         long tformat = 0;
         
-        long hours = (seconds % 3600) / 60;
-        long minutes = seconds % 60;
+        long hours = (seconds % 3600) / 60; // Real world minutes
+        long minutes = seconds % 60; // Real world seconds
         
         tformat = (hours * 100) + minutes;
         

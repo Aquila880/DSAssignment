@@ -5,7 +5,8 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
 public class App {
-
+    
+    // Main program
     public static void main(String[] args) {
         
         // Display real world time in HourHourminuteminute format
@@ -18,10 +19,45 @@ public class App {
         // This counts the time since program starts
         FakeTime time = new FakeTime(realstartTime);
         
+        LinkedList<Customer> cstmr = new LinkedList<Customer>();
+        LinkedList<Driver> drvr = new LinkedList<Driver>();
+        
+        cstmr.add(new Customer("Ray", "reached", 1450, 5, 23, -78, 1.111236, -91.2323023));
+        
+        while(true) {
+            String s = homePage(time.currentTime());
+        
+            // Open menu according to input
+            if (s.equals("A")) {
+                sysDash(time, cstmr, drvr);
+            }
+            else if (s.equals("B")) {
+                System.out.println("Customer View");
+            }
+            else {
+                System.out.println("Driver overview");
+            }
+        }
+    }
+    
+    // Methods
+    // System dashboard with updated customer and driver information
+    public static void sysDash(FakeTime time, LinkedList<Customer> cstmr, LinkedList<Driver> drvr) {
+        long listtime = time.currentTime();
+        System.out.printf("Requests List (List Last Updated Time : %04d\n", listtime); 
+        System.out.printf("(Current time : %04d)\n", time.currentTime());
+        System.out.println("==============================================================================");
+        System.out.println("Customer  Status      Expected Arrival Time  Capacity  Starting Point       Destination");
+        for (int i = 0; i < cstmr.getSize(); i++) {
+            System.out.println(cstmr.get(i).print());
+        }
+    }
+    
+    public static String homePage(long time) {
         // Home Page
         System.out.println("Welcome to Customer always right E-hailing Application!");
         System.out.println("Options :");
-        System.out.printf("Current time : %04d\n", realstartTime);
+        System.out.printf("(Current time : %04d)\n", time);
         
         // Ask for user input
         Scanner sc = new Scanner(System.in);
@@ -37,19 +73,6 @@ public class App {
                 break;
         }
         
-        // Open menu according to input
-        if (s.equals("A")) {
-            System.out.printf("%04d\n", time.currentTime());
-            System.out.println("System dashboard");
-        }
-        else if (s.equals("B")) {
-            System.out.println("Customer View");
-        }
-        else {
-            System.out.println("Driver overview");
-        }
-        
-        System.out.println(time.convToFormat(360));
-        System.out.println(time.convToSeconds(921));
+        return s;
     }
 }
