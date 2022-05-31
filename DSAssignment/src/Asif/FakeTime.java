@@ -27,6 +27,7 @@ public class FakeTime {
         long time;
         
         time = convToSeconds(realStartTime) + elapsedTime();
+        time = convToFormat(time);
         
         return time;
     }
@@ -61,8 +62,8 @@ public class FakeTime {
         return seconds;
     }
     
-    // Convert seconds (1s = 1min, 1 min = 1h) to HHmm time format (TFormat)
-    public long convToTFormat(long seconds) {
+    // Convert seconds (1s = 1min, 1 min = 1h) to HHmm time format (Format)
+    public long convToFormat(long seconds) {
         long tformat = 0;
         
         long hours = (seconds % 3600) / 60;

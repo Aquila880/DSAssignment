@@ -49,7 +49,7 @@ public class App {
             System.out.println("Driver overview");
         }
         
-        System.out.println(time.convToTFormat(360));
+        System.out.println(time.convToFormat(360));
         System.out.println(time.convToSeconds(921));
     }
 }
