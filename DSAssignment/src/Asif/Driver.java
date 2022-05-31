@@ -2,11 +2,11 @@ package Asif;
 
 public class Driver {
     private int capacity;
-    private long latitude, longitude;
+    private double latitude, longitude;
     private String status;
     private Customer customer;
     
-    public Driver(String status, int capacity, long latitude, long longitude) {
+    public Driver(String status, int capacity, double latitude, double longitude) {
         this.status = status;
         this.capacity = capacity;
         this.latitude = latitude;
@@ -19,8 +19,11 @@ public class Driver {
     public String toString() {
         switch(this.getStatus()) {
             case "available" :
-                return this.getStatus() + "    " + this.getCapacity() + "          " + this.getLongitude() + ", " + this.getLatitude()
-                        + "     " + this.getCustomer().getName();
+                return this.getStatus() + "      " + this.getCapacity() + "          " + this.getLongitude() + ", " + this.getLatitude()
+                        + "           " + this.getCustomer().getName();
+            case "not available" :
+                return this.getStatus() + "  " + this.getCapacity() + "          " + this.getLongitude() + ", " + this.getLatitude()
+                        + "           " + this.getCustomer().getName();
         }
         return null;
     }
@@ -34,19 +37,19 @@ public class Driver {
         this.capacity = capacity;
     }
 
-    public long getLatitude() {
+    public double getLatitude() {
         return latitude;
     }
 
-    public void setLatitude(long latitude) {
+    public void setLatitude(double latitude) {
         this.latitude = latitude;
     }
 
-    public long getLongitude() {
+    public double getLongitude() {
         return longitude;
     }
 
-    public void setLongitude(long longitude) {
+    public void setLongitude(double longitude) {
         this.longitude = longitude;
     }
 
