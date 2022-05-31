@@ -23,6 +23,9 @@ public class App {
         LinkedList<Driver> drvr = new LinkedList<Driver>();
         
         cstmr.add(new Customer("Ray", "reached", 1450, 5, 23, -78, 1.111236, -91.2323023));
+        cstmr.add(new Customer("John", "picked up", 1730, 5, 0, 0, 0, 0));
+        
+        drvr.add(new Driver("available", 5, 34, 9));
         
         while(true) {
             String s = homePage(time.currentTime());
@@ -44,13 +47,25 @@ public class App {
     // System dashboard with updated customer and driver information
     public static void sysDash(FakeTime time, LinkedList<Customer> cstmr, LinkedList<Driver> drvr) {
         long listtime = time.currentTime();
+        // Customer requests list
         System.out.printf("Requests List (List Last Updated Time : %04d\n", listtime); 
         System.out.printf("(Current time : %04d)\n", time.currentTime());
-        System.out.println("==============================================================================");
-        System.out.println("Customer  Status      Expected Arrival Time  Capacity  Starting Point       Destination");
+        System.out.println("======================================================================================================");
+        System.out.println("Customer  Status       Expected Arrival Time  Capacity  Starting Point       Destination");
         for (int i = 0; i < cstmr.getSize(); i++) {
-            System.out.println(cstmr.get(i).print());
+            System.out.println(cstmr.get(i).toString());
         }
+        System.out.println("======================================================================================================\n\n");
+        
+        // Drivers list
+        System.out.printf("Requests List (List Last Updated Time : %04d\n", listtime); 
+        System.out.printf("(Current time : %04d)\n", time.currentTime());
+        System.out.println("===================================================================");
+        System.out.println("Driver A   Status       Capacity   Location        Customer");
+        for (int i = 0; i < drvr.getSize(); i++) {
+            System.out.println("Driver " + (i + 1) + "   " + drvr.get(i).toString());
+        }
+        System.out.println("===================================================================\n\n");
     }
     
     public static String homePage(long time) {

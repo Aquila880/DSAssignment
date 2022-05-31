@@ -6,6 +6,10 @@ public class Customer {
     private double startlatitude, startlongitude;
     private double destlatitude, destlongitude;
 
+    public Customer() {
+        
+    }
+
     public Customer(String name, String status, int time, int capacity, double startlatitude, double startlongitude, double destlatitude, double destlongitude) {
         this.name = name;
         this.status = status;
@@ -17,27 +21,105 @@ public class Customer {
         this.destlongitude = destlongitude;
     }
     
-    public String print() {
-        if (this.getName().length() == 3) {
-            return this.getName() + "       " + this.getStatus() + "     " + this.getTime() + "                   " + this.getCapacity() + "         "
-            + this.getStartlatitude() + ", " + this.getStartlongitude() + "          " + this.getDestlatitude() + " , " + this.getDestlongitude();
+    // Print customer information
+    @Override
+    public String toString() {
+        switch(this.getStatus()) {
+            case "reached" :
+                switch (this.getName().length()) {
+                    case 2 :
+                        return this.getName() + "        " + this.getStatus() + "      " + this.getTime() + "                   " + 
+                                this.getCapacity() + "         " + this.getStartlatitude() + ", " + this.getStartlongitude() + "          " 
+                                    + this.getDestlatitude() + " , " + this.getDestlongitude();
+                    case 3 :
+                        return this.getName() + "       " + this.getStatus() + "      " + this.getTime() + "                   " + 
+                                this.getCapacity() + "         " + this.getStartlatitude() + ", " + this.getStartlongitude() + "          " 
+                                    + this.getDestlatitude() + " , " + this.getDestlongitude();
+                    case 4 :
+                        return this.getName() + "      " + this.getStatus() + "      " + this.getTime() + "                   " + 
+                                this.getCapacity() + "         " + this.getStartlatitude() + ", " + this.getStartlongitude() 
+                                    + "          " + this.getDestlatitude() + " , " + this.getDestlongitude();
+                    case 5 :
+                        return this.getName() + "     " + this.getStatus() + "      " + this.getTime() + "                   " + 
+                                this.getCapacity() + "         " + this.getStartlatitude() + ", " + this.getStartlongitude() + "          "
+                                    + this.getDestlatitude() + " , " + this.getDestlongitude();
+                    case 6 :
+                        return this.getName() + "    " + this.getStatus() + "      " + this.getTime() + "                   " +
+                                this.getCapacity() + "         " + this.getStartlatitude() + ", " + this.getStartlongitude() + "          " 
+                                    + this.getDestlatitude() + " , " + this.getDestlongitude();
+                }
+            case "picked up" :
+                switch (this.getName().length()) {
+                    case 2:
+                        return this.getName() + "        " + this.getStatus() + "    " + this.getTime() + "                   " + 
+                                this.getCapacity() + "         " + this.getStartlatitude() + ", " + this.getStartlongitude() + "          " 
+                                    + this.getDestlatitude() + " , " + this.getDestlongitude();
+                    case 3:
+                        return this.getName() + "       " + this.getStatus() + "    " + this.getTime() + "                   " + 
+                                this.getCapacity() + "         " + this.getStartlatitude() + ", " + this.getStartlongitude() + "          " 
+                                    + this.getDestlatitude() + " , " + this.getDestlongitude();
+                    case 4:
+                        return this.getName() + "      " + this.getStatus() + "    " + this.getTime() + "                   " + 
+                                this.getCapacity() + "         " + this.getStartlatitude() + ", " + this.getStartlongitude() 
+                                    + "          " + this.getDestlatitude() + " , " + this.getDestlongitude();
+                    case 5:
+                        return this.getName() + "     " + this.getStatus() + "    " + this.getTime() + "                   " + 
+                                this.getCapacity() + "         " + this.getStartlatitude() + ", " + this.getStartlongitude() + "          "
+                                    + this.getDestlatitude() + " , " + this.getDestlongitude();
+                    case 6:
+                        return this.getName() + "    " + this.getStatus() + "    " + this.getTime() + "                   " +
+                                this.getCapacity() + "         " + this.getStartlatitude() + ", " + this.getStartlongitude() + "          " 
+                                    + this.getDestlatitude() + " , " + this.getDestlongitude();
+                }
+            case "pending" :
+                switch (this.getName().length()) {
+                    case 2:
+                        return this.getName() + "        " + this.getStatus() + "     " + this.getTime() + "                   " + 
+                                this.getCapacity() + "         " + this.getStartlatitude() + ", " + this.getStartlongitude() + "          " 
+                                    + this.getDestlatitude() + " , " + this.getDestlongitude();
+                    case 3:
+                        return this.getName() + "       " + this.getStatus() + "     " + this.getTime() + "                   " + 
+                                this.getCapacity() + "         " + this.getStartlatitude() + ", " + this.getStartlongitude() + "          " 
+                                    + this.getDestlatitude() + " , " + this.getDestlongitude();
+                    case 4:
+                        return this.getName() + "      " + this.getStatus() + "     " + this.getTime() + "                   " + 
+                                this.getCapacity() + "         " + this.getStartlatitude() + ", " + this.getStartlongitude() 
+                                    + "          " + this.getDestlatitude() + " , " + this.getDestlongitude();
+                    case 5:
+                        return this.getName() + "     " + this.getStatus() + "     " + this.getTime() + "                   " + 
+                                this.getCapacity() + "         " + this.getStartlatitude() + ", " + this.getStartlongitude() + "          "
+                                    + this.getDestlatitude() + " , " + this.getDestlongitude();
+                    case 6:
+                        return this.getName() + "    " + this.getStatus() + "     " + this.getTime() + "                   " +
+                                this.getCapacity() + "         " + this.getStartlatitude() + ", " + this.getStartlongitude() + "          " 
+                                    + this.getDestlatitude() + " , " + this.getDestlongitude();
+                }
+            case "waiting" :
+                switch (this.getName().length()) {
+                    case 2:
+                        return this.getName() + "        " + this.getStatus() + "     " + this.getTime() + "                   " + 
+                                this.getCapacity() + "         " + this.getStartlatitude() + ", " + this.getStartlongitude() + "          " 
+                                    + this.getDestlatitude() + " , " + this.getDestlongitude();
+                    case 3:
+                        return this.getName() + "       " + this.getStatus() + "     " + this.getTime() + "                   " + 
+                                this.getCapacity() + "         " + this.getStartlatitude() + ", " + this.getStartlongitude() + "          " 
+                                    + this.getDestlatitude() + " , " + this.getDestlongitude();
+                    case 4:
+                        return this.getName() + "      " + this.getStatus() + "     " + this.getTime() + "                   " + 
+                                this.getCapacity() + "         " + this.getStartlatitude() + ", " + this.getStartlongitude() 
+                                    + "          " + this.getDestlatitude() + " , " + this.getDestlongitude();
+                    case 5:
+                        return this.getName() + "     " + this.getStatus() + "     " + this.getTime() + "                   " + 
+                                this.getCapacity() + "         " + this.getStartlatitude() + ", " + this.getStartlongitude() + "          "
+                                    + this.getDestlatitude() + " , " + this.getDestlongitude();
+                    case 6:
+                        return this.getName() + "    " + this.getStatus() + "     " + this.getTime() + "                   " +
+                                this.getCapacity() + "         " + this.getStartlatitude() + ", " + this.getStartlongitude() + "          " 
+                                    + this.getDestlatitude() + " , " + this.getDestlongitude();
+                }
         }
-        else if (this.getName().length() == 4) {
-            return this.getName() + "      " + this.getStatus() + "     " + this.getTime() + "                   " + this.getCapacity() + "         "
-            + this.getStartlatitude() + ", " + this.getStartlongitude() + "          " + this.getDestlatitude() + " , " + this.getDestlongitude();
-        }
-        else if (this.getName().length() == 5) {
-            return this.getName() + "     " + this.getStatus() + "     " + this.getTime() + "                   " + this.getCapacity() + "         "
-            + this.getStartlatitude() + ", " + this.getStartlongitude() + "          " + this.getDestlatitude() + " , " + this.getDestlongitude();
-        }
-        else if (this.getName().length() == 6) {
-            return this.getName() + "    " + this.getStatus() + "     " + this.getTime() + "                   " + this.getCapacity() + "         "
-            + this.getStartlatitude() + ", " + this.getStartlongitude() + "          " + this.getDestlatitude() + " , " + this.getDestlongitude();
-        }
-        else {
-            return this.getName() + "   " + this.getStatus() + "     " + this.getTime() + "                   " + this.getCapacity() + "         "
-            + this.getStartlatitude() + ", " + this.getStartlongitude() + "          " + this.getDestlatitude() + " , " + this.getDestlongitude();
-        }
+        
+        return null;
     }
 
     // Accessors and mutators

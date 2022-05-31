@@ -1,27 +1,31 @@
 package Asif;
 
 public class Driver {
-    private int number ,capacity;
+    private int capacity;
     private long latitude, longitude;
-    private String status, customer;
+    private String status;
+    private Customer customer;
     
-    public Driver(int number, int capacity, long latitude, long longitude) {
-        this.number = number;
-        this.status = "available";
+    public Driver(String status, int capacity, long latitude, long longitude) {
+        this.status = status;
         this.capacity = capacity;
         this.latitude = latitude;
         this.longitude = longitude;
+        customer = new Customer();
+        customer.setName("-");
+    }
+    
+    @Override
+    public String toString() {
+        switch(this.getStatus()) {
+            case "available" :
+                return this.getStatus() + "    " + this.getCapacity() + "          " + this.getLongitude() + ", " + this.getLatitude()
+                        + "     " + this.getCustomer().getName();
+        }
+        return null;
     }
     
     // Accessors and mutators
-    public int getNumber() {
-        return number;
-    }
-
-    public void setNumber(int number) {
-        this.number = number;
-    }
-
     public int getCapacity() {
         return capacity;
     }
@@ -54,11 +58,11 @@ public class Driver {
         this.status = status;
     }
 
-    public String getCustomer() {
+    public Customer getCustomer() {
         return customer;
     }
 
-    public void setCustomer(String customer) {
+    public void setCustomer(Customer customer) {
         this.customer = customer;
     }
 }
