@@ -3,10 +3,11 @@ package Asif;
 import java.util.Scanner;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class App {
     
-    // Main program
     public static void main(String[] args) {
         
         // Display real world time in HourHourminuteminute format
@@ -19,6 +20,7 @@ public class App {
         // This counts the time since program starts
         FakeTime time = new FakeTime(realstartTime);
         
+        // Example customers and drivers
         LinkedList<Customer> cstmr = new LinkedList<Customer>();
         LinkedList<Driver> drvr = new LinkedList<Driver>();
         
@@ -31,25 +33,35 @@ public class App {
         drvr.add(new Driver("not available", 5, 3.65, 91.12));
         drvr.add(new Driver("available", 4, -34.23, 77.65));
         
+        Timer timer = new Timer();
+        
+        // Main program
         while(true) {
             String s = homePage(time.currentTime());
         
             // Open menu according to input
-            if (s.equals("A")) {
-                sysDash(time, cstmr, drvr);
-            }
-            else if (s.equals("B")) {
-                System.out.println("Customer View");
-            }
-            else {
-                System.out.println("Driver overview");
+            switch (s) {
+                case "A":
+                    SysDash(time, cstmr, drvr);
+                    break;
+                case "B":
+                    timer.schedule(new TimerTask() {
+                        @Override
+                        public void run() {
+                            CustomerView(time, cstmr, drvr);
+                        }
+                    }, 0, 5000);
+                    break;
+                default:
+                    System.out.println("Driver overview");
+                    break;
             }
         }
     }
     
-    // Methods
+    // ~~Methods~~
     // System dashboard with updated customer and driver information
-    public static void sysDash(FakeTime time, LinkedList<Customer> cstmr, LinkedList<Driver> drvr) {
+    public static void SysDash(FakeTime time, LinkedList<Customer> cstmr, LinkedList<Driver> drvr) {
         long listtime = time.currentTime();
         // Customer requests list
         System.out.printf("Requests List (List Last Updated Time : %04d\n", listtime); 
@@ -70,6 +82,10 @@ public class App {
             System.out.println("Driver " + (i + 1) + "   " + drvr.get(i).toString());
         }
         System.out.println("=====================================================================\n");
+    }
+    
+    public static void CustomerView(FakeTime time, LinkedList<Customer> cstmr, LinkedList<Driver> drvr) {
+        
     }
     
     public static String homePage(long time) {
@@ -93,5 +109,23 @@ public class App {
         }
         
         return s;
+    }
+    
+    /* Haversian method to calculate the distance between two geographical coordinates
+    It has been modified to not take elevation into consideration */
+    public static double distance(double lat1, double lat2, double lon1, double lon2) {
+        final int R = 6371; // Radius of the earth
+
+        double latDistance = Math.toRadians(lat2 - lat1);
+        double lonDistance = Math.toRadians(lon2 - lon1);
+        
+        double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2)
+            + Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2))
+            * Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
+        
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        double distance = R * c * 1000; // convert to meters
+        
+        return distance;
     }
 }
