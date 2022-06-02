@@ -7,6 +7,7 @@ Calculations will be done with above considerations but variables will be named 
 public class FakeTime {
     private long startTime; // Program start time
     private long realStartTime; //real world start time
+    private int day = 0;
     
     // Initializes the program start time and real world start time
     public FakeTime(long realStartTime) {
@@ -30,6 +31,7 @@ public class FakeTime {
         // Reset time after each day
         if (time >= 1440) {
             time = time % 1440;
+            day++;
         }
         time = convToFormat(time);
         
@@ -83,5 +85,31 @@ public class FakeTime {
         tformat = (hours * 100) + minutes;
         
         return tformat;
+    }
+    
+    // Checks if Driving time is less than Expected Arrival Time
+    // EAT is in format, while T is in seconds
+    public boolean checkFormat(long EAT, long DT) {
+        EAT = convToSeconds(EAT);
+        DT = DT + 5; // Since list is automatically updated only after 5 seconds
+        long currentTime = convToSeconds(currentTime());
+        
+        if (EAT < currentTime) {
+            EAT = EAT + 1440;
+        }
+        
+        if (DT <= EAT) {
+            return true;
+        }
+        
+        return false;
+    }
+
+    public int getDay() {
+        return day;
+    }
+
+    public void setDay(int day) {
+        this.day = day;
     }
 }

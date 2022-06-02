@@ -2,7 +2,10 @@ package Asif;
 
 public class Customer {
     private String name, status;
-    private int capacity, time;
+    // Number of passengers and (number of days passed since request)
+    private int capacity; // day; not required yet as customer EAT is never more than one day
+    // expected arrival time
+    private long time;
     private double startlatitude, startlongitude;
     private double destlatitude, destlongitude;
 
@@ -10,7 +13,7 @@ public class Customer {
         
     }
 
-    public Customer(String name, String status, int time, int capacity, double startlatitude, double startlongitude, double destlatitude, double destlongitude) {
+    public Customer(String name, String status, long time, int capacity, double startlatitude, double startlongitude, double destlatitude, double destlongitude) {
         this.name = name;
         this.status = status;
         this.time = time;
@@ -21,9 +24,8 @@ public class Customer {
         this.destlongitude = destlongitude;
     }
     
-    // Print customer information
-    @Override
-    public String toString() {
+    // Print customer information for admin dashboard
+    public String dashInfo() {
         switch(this.getStatus()) {
             case "reached" :
                 switch (this.getName().length()) {
@@ -147,11 +149,11 @@ public class Customer {
         this.capacity = capacity;
     }
 
-    public int getTime() {
+    public long getTime() {
         return time;
     }
 
-    public void setTime(int time) {
+    public void setTime(long time) {
         this.time = time;
     }
 
@@ -186,5 +188,12 @@ public class Customer {
     public void setDestlongitude(double destlongitude) {
         this.destlongitude = destlongitude;
     }
-    
+
+    /* public int getDay() {
+        return day;
+    }
+
+    public void setDay(int day) {
+        this.day = day;
+    } */
 }

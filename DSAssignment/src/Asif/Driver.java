@@ -5,6 +5,11 @@ public class Driver {
     private double latitude, longitude;
     private String status;
     private Customer customer;
+    double speed = 1000; // m/s
+
+    public Driver() {
+    
+    }
     
     public Driver(String status, int capacity, double latitude, double longitude) {
         this.status = status;
@@ -15,8 +20,8 @@ public class Driver {
         customer.setName("-");
     }
     
-    @Override
-    public String toString() {
+    // Print driver information for admin dashboard
+    public String dashInfo() {
         switch(this.getStatus()) {
             case "available" :
                 return this.getStatus() + "      " + this.getCapacity() + "          " + this.getLongitude() + ", " + this.getLatitude()
@@ -67,5 +72,13 @@ public class Driver {
 
     public void setCustomer(Customer customer) {
         this.customer = customer;
+    }
+
+    public double getSpeed() {
+        return speed;
+    }
+
+    public void setSpeed(double speed) {
+        this.speed = speed;
     }
 }

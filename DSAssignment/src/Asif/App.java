@@ -24,6 +24,7 @@ public class App {
         LinkedList<Customer> cstmr = new LinkedList<Customer>();
         LinkedList<Driver> drvr = new LinkedList<Driver>();
         
+        /* Dashboard check
         cstmr.add(new Customer("Ray", "reached", 1450, 5, 9.26, -78.31, 1.11, -91.23));
         cstmr.add(new Customer("John", "picked up", 1730, 5, 3.62, 42.91, 76.66, 5.1));
         cstmr.add(new Customer("Adam", "pending", 1730, 4, 31.62, 2.91, -76.66, 5.1));
@@ -32,8 +33,10 @@ public class App {
         drvr.add(new Driver("available", 5, 34.65, 9.12));
         drvr.add(new Driver("not available", 5, 3.65, 91.12));
         drvr.add(new Driver("available", 4, -34.23, 77.65));
+        */
         
         Timer timer = new Timer();
+        System.out.println(distance(78.11, -32.32, -44.77, 121.32));
         
         // Main program
         while(true) {
@@ -42,15 +45,15 @@ public class App {
             // Open menu according to input
             switch (s) {
                 case "A":
-                    SysDash(time, cstmr, drvr);
+                    sysDash(time, cstmr, drvr);
                     break;
                 case "B":
-                    timer.schedule(new TimerTask() {
-                        @Override
-                        public void run() {
-                            CustomerView(time, cstmr, drvr);
-                        }
-                    }, 0, 5000);
+                    //timer.schedule(new TimerTask() {
+                        //@Override
+                        //public void run() {
+                            customerView(time, cstmr, drvr);
+                        //}
+                    //}, 0, 5000);
                     break;
                 default:
                     System.out.println("Driver overview");
@@ -60,34 +63,6 @@ public class App {
     }
     
     // ~~Methods~~
-    // System dashboard with updated customer and driver information
-    public static void SysDash(FakeTime time, LinkedList<Customer> cstmr, LinkedList<Driver> drvr) {
-        long listtime = time.currentTime();
-        // Customer requests list
-        System.out.printf("Requests List (List Last Updated Time : %04d\n", listtime); 
-        System.out.printf("(Current time : %04d)\n", time.currentTime());
-        System.out.println("======================================================================================================");
-        System.out.println("Customer  Status       Expected Arrival Time  Capacity    Starting Point       Destination");
-        for (int i = 0; i < cstmr.getSize(); i++) {
-            System.out.println(cstmr.get(i).toString());
-        }
-        System.out.println("======================================================================================================\n\n");
-        
-        // Drivers list
-        System.out.printf("Requests List (List Last Updated Time : %04d\n", listtime); 
-        System.out.printf("(Current time : %04d)\n", time.currentTime());
-        System.out.println("=====================================================================");
-        System.out.println("Driver A   Status         Capacity   Location            Customer");
-        for (int i = 0; i < drvr.getSize(); i++) {
-            System.out.println("Driver " + (i + 1) + "   " + drvr.get(i).toString());
-        }
-        System.out.println("=====================================================================\n");
-    }
-    
-    public static void CustomerView(FakeTime time, LinkedList<Customer> cstmr, LinkedList<Driver> drvr) {
-        
-    }
-    
     public static String homePage(long time) {
         // Home Page
         System.out.println("Welcome to Customer always right E-hailing Application!");
@@ -109,6 +84,151 @@ public class App {
         }
         
         return s;
+    }
+    
+    
+    // A - System dashboard with updated customer and driver information
+    public static void sysDash(FakeTime time, LinkedList<Customer> cstmr, LinkedList<Driver> drvr) {
+        
+        // List update function needs to be written here                        ~~~~~~
+        long listtime = time.currentTime();
+        
+        // Customer requests list
+        System.out.printf("Requests List (List Last Updated Time : %04d\n", listtime); 
+        System.out.printf("(Current time : %04d)\n", time.currentTime());
+        System.out.println("======================================================================================================");
+        System.out.println("Customer  Status       Expected Arrival Time  Capacity    Starting Point       Destination");
+        for (int i = 0; i < cstmr.getSize(); i++) {
+            System.out.println(cstmr.get(i).dashInfo());
+        }
+        System.out.println("======================================================================================================\n\n");
+        
+        // Drivers list
+        System.out.printf("Requests List (List Last Updated Time : %04d\n", listtime); 
+        System.out.printf("(Current time : %04d)\n", time.currentTime());
+        System.out.println("=====================================================================");
+        System.out.println("Driver A   Status         Capacity   Location            Customer");
+        for (int i = 0; i < drvr.getSize(); i++) {
+            System.out.println("Driver " + (i + 1) + "   " + drvr.get(i).dashInfo());
+        }
+        System.out.println("=====================================================================\n");
+    }
+    
+    // B - Customer View related section
+    public static void customerView(FakeTime time, LinkedList<Customer> cstmr, LinkedList<Driver> drvr) {
+        while(true) {
+            System.out.println("You are in customer view now (Enter \"exit\" to go back to homepage):");
+            System.out.println("Options :");
+            System.out.println("A - Create customer requests");
+            System.out.println("B - Update customer requests");
+            System.out.print(">> ");
+            
+            Scanner sc = new Scanner(System.in);
+            String s = sc.next();
+            System.out.println();
+            
+            // Exit back to homepage
+            if (s.equals("exit")) break;
+            
+            // Create customer requests
+            if (s.equals("A")) {
+                Customer c;
+                while(true) {
+                    System.out.println("Enter the details of the customer you want to create (name, Expected arrival time, capacity, starting point; "
+                            + "destination)");
+                    System.out.println("You are in customer view now (Enter \"exit\" to go back to homepage):");
+                    System.out.print(">> ");
+                    
+                    // Take customer info from user
+                    s = sc.nextLine();
+                    
+                    // Create customer if user inputs valid customer and add to linkedlist
+                    if (createCustomerCheck(s)) {
+                        c = createCustomer(s);
+                        cstmr.addLast(c);
+                        break;
+                    }
+                }
+                
+                System.out.println();
+                System.out.println("The request is received, please choose your driver...");
+                System.out.println();
+                
+                // Customer info for checking available drivers
+                int capacity = c.getCapacity();
+                long EAT = c.getTime();
+                double custlat1 = c.getStartlatitude();
+                double custlon1 = c.getStartlongitude();
+                double custlat2 = c.getDestlatitude();
+                double custlon2 = c.getDestlongitude();
+                   
+                /* This only works if the time required to ferry the customer to destination is less than one day, the EAT format in
+                the question doesn't allow for more than day of time as */
+                for (int i = 0; i < drvr.getSize(); i++) {
+                    Driver d = drvr.get(i);
+                    
+                    if (d.getCapacity() >= capacity) {
+                        double dlat1 = d.getLatitude();
+                        double dlon1 = d.getLongitude();
+                        
+                        // Distance from driver to customer and from customer to destination
+                        double distance = distance(dlat1, dlon1, custlat1, custlon1) + distance(custlat1, custlon1, custlat2, custlon2);
+                        
+                        long DT = (long) (distance / d.getSpeed());
+                        
+                        if (!(DT > 1440)) {
+                            boolean b = time.checkFormat(EAT, DT);
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    // This could use some work                                                 ~~~~~
+    public static boolean createCustomerCheck(String s) {
+        String[] string = s.split(" ");
+        // >> John 1730 5 latitude, longitude, latitude, longitude
+        
+        if (string.length == 7) {
+            String name = string[0];
+            long time = Long.parseLong(string[1]);
+            int capacity = Integer.parseInt(string[2]);
+            
+            double lat1 = Double.parseDouble(string[3]);
+            double lon1 = Double.parseDouble(string[4]);
+            
+            double lat2 = Double.parseDouble(string[5]);
+            double lon2 = Double.parseDouble(string[6]);
+            
+            if (time / 10000 == 0) {
+                if ((lat1 <= 90 && lat1 >= -90) && (lon1 <= 180 && lon1 >= -180)) {
+                    if ((lat2 <= 90 && lat2 >= -90) && (lon2 <= 180 && lon2 >= -180)) {
+                        return true;
+                    }
+                }
+            }
+        }
+        
+        return false;
+    }
+    
+    public static Customer createCustomer(String s) {
+        Customer c;
+        String[] string = s.split(" ");
+        String name = string[0];
+        long time = Long.parseLong(string[1]);
+        int capacity = Integer.parseInt(string[2]);
+            
+        double lat1 = Double.parseDouble(string[3]);
+        double lon1 = Double.parseDouble(string[4]);
+            
+        double lat2 = Double.parseDouble(string[5]);
+        double lon2 = Double.parseDouble(string[6]);
+        
+        c = new Customer(name, "waiting", time, capacity, lat1, lon1, lat2, lon2);
+        
+        return c;
     }
     
     /* Haversian method to calculate the distance between two geographical coordinates
