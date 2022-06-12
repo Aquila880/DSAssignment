@@ -8,6 +8,10 @@ public class FakeTime {
     private long startTime; // Program start time
     private long realStartTime; //real world start time
     private int day = 0;
+
+    public FakeTime() {
+    
+    }
     
     // Initializes the program start time and real world start time
     public FakeTime(long realStartTime) {
@@ -37,10 +41,6 @@ public class FakeTime {
         
         return time;
     }
-    
-    //public long timeDifference() {
-        
-    //}
     
     // Convert the time format (HHmm) in the main program to seconds (1s = 1min)
     public long convToSeconds(long time) {

@@ -24,7 +24,7 @@ public class App {
         LinkedList<Customer> cstmr = new LinkedList<Customer>();
         LinkedList<Driver> drvr = new LinkedList<Driver>();
         
-        /* Dashboard check
+        // Dashboard check
         cstmr.add(new Customer("Ray", "reached", 1450, 5, 9.26, -78.31, 1.11, -91.23));
         cstmr.add(new Customer("John", "picked up", 1730, 5, 3.62, 42.91, 76.66, 5.1));
         cstmr.add(new Customer("Adam", "pending", 1730, 4, 31.62, 2.91, -76.66, 5.1));
@@ -33,10 +33,11 @@ public class App {
         drvr.add(new Driver("available", 5, 34.65, 9.12));
         drvr.add(new Driver("not available", 5, 3.65, 91.12));
         drvr.add(new Driver("available", 4, -34.23, 77.65));
-        */
         
+        // Timer object to rerun method after specified time
         Timer timer = new Timer();
-        System.out.println(distance(78.11, -32.32, -44.77, 121.32));
+        double d = distance(9.12, 34.65, 9.15, 34.69);
+        System.out.println(d);
         
         // Main program
         while(true) {
@@ -116,6 +117,7 @@ public class App {
     
     // B - Customer View related section
     public static void customerView(FakeTime time, LinkedList<Customer> cstmr, LinkedList<Driver> drvr) {
+        main:
         while(true) {
             System.out.println("You are in customer view now (Enter \"exit\" to go back to homepage):");
             System.out.println("Options :");
@@ -132,57 +134,74 @@ public class App {
             
             // Create customer requests
             if (s.equals("A")) {
-                Customer c;
-                while(true) {
-                    System.out.println("Enter the details of the customer you want to create (name, Expected arrival time, capacity, starting point; "
-                            + "destination)");
-                    System.out.println("You are in customer view now (Enter \"exit\" to go back to homepage):");
-                    System.out.print(">> ");
-                    
-                    // Take customer info from user
-                    s = sc.nextLine();
-                    
-                    // Create customer if user inputs valid customer and add to linkedlist
-                    if (createCustomerCheck(s)) {
-                        c = createCustomer(s);
-                        cstmr.addLast(c);
-                        break;
-                    }
+                boolean b = customerViewA(time, cstmr, drvr);
+                if (b == false) {
+                    break main;
                 }
-                
-                System.out.println();
-                System.out.println("The request is received, please choose your driver...");
-                System.out.println();
-                
-                // Customer info for checking available drivers
-                int capacity = c.getCapacity();
-                long EAT = c.getTime();
-                double custlat1 = c.getStartlatitude();
-                double custlon1 = c.getStartlongitude();
-                double custlat2 = c.getDestlatitude();
-                double custlon2 = c.getDestlongitude();
-                   
-                /* This only works if the time required to ferry the customer to destination is less than one day, the EAT format in
-                the question doesn't allow for more than day of time as */
-                for (int i = 0; i < drvr.getSize(); i++) {
-                    Driver d = drvr.get(i);
+            }
+        }
+    }
+    
+    // BA - Create customer requests
+    public static boolean customerViewA(FakeTime time, LinkedList<Customer> cstmr, LinkedList<Driver> drvr) {
+        Customer c = new Customer();
+        while(true) {
+            System.out.println("Enter the details of the customer you want to create (name, Expected arrival time, capacity, starting point, destination)");
+            System.out.println("(Enter \"exit\" to go back to homepage):");
+            System.out.print(">> ");
                     
-                    if (d.getCapacity() >= capacity) {
-                        double dlat1 = d.getLatitude();
-                        double dlon1 = d.getLongitude();
+            // Take customer info from user
+            Scanner sc = new Scanner(System.in);
+            String s = sc.nextLine();
+            System.out.println();
+                    
+            // Exit back to homepage
+            if (s.equals("exit")) return false; 
+                    
+            // Create customer if user inputs valid customer and add to linkedlist
+            if (createCustomerCheck(s)) {
+                c = createCustomer(s);
+                cstmr.addLast(c);
+                break;
+            }
+        }
+                
+        System.out.println();
+        System.out.println("The request is received, please choose your driver...");
+        System.out.println();
+                
+        // Customer info for checking available drivers
+        int capacity = c.getCapacity();
+        long EAT = c.getTime();
+        double custlat1 = c.getStartlatitude();
+        double custlon1 = c.getStartlongitude();
+        double custlat2 = c.getDestlatitude();
+        double custlon2 = c.getDestlongitude();
+                   
+        /* This only works if the time required to ferry the customer to destination is less than one day, the EAT format in
+        the question doesn't allow for more than day of time */
+        for (int i = 0; i < drvr.getSize(); i++) {
+            Driver d = drvr.get(i);
+                    
+            if (d.getCapacity() >= capacity) {
+                double dlat1 = d.getLatitude();
+                double dlon1 = d.getLongitude();
                         
-                        // Distance from driver to customer and from customer to destination
-                        double distance = distance(dlat1, dlon1, custlat1, custlon1) + distance(custlat1, custlon1, custlat2, custlon2);
+                // Distance from driver to customer and from customer to destination
+                double distance = distance(dlat1, dlon1, custlat1, custlon1) + distance(custlat1, custlon1, custlat2, custlon2);
+                System.out.println(distance);
                         
-                        long DT = (long) (distance / d.getSpeed());
+                long DT = (long) (distance / d.getSpeed());
+                System.out.println(DT);
                         
-                        if (!(DT > 1440)) {
-                            boolean b = time.checkFormat(EAT, DT);
-                        }
+                if (!(DT > 1440)) {
+                    if (time.checkFormat(EAT, DT)) {
+                        System.out.println(d.getCapacity());
                     }
                 }
             }
         }
+        return true;    
     }
     
     // This could use some work                                                 ~~~~~
@@ -231,7 +250,7 @@ public class App {
         return c;
     }
     
-    /* Haversian method to calculate the distance between two geographical coordinates
+    /* Haversine method to calculate the distance between two geographical coordinates
     It has been modified to not take elevation into consideration */
     public static double distance(double lat1, double lat2, double lon1, double lon2) {
         final int R = 6371; // Radius of the earth

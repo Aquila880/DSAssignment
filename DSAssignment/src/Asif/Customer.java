@@ -3,7 +3,7 @@ package Asif;
 public class Customer {
     private String name, status;
     // Number of passengers and (number of days passed since request)
-    private int capacity; // day; not required yet as customer EAT is never more than one day
+    private int capacity, day; // to check the day the customer request was made
     // expected arrival time
     private long time;
     private double startlatitude, startlongitude;
@@ -189,11 +189,11 @@ public class Customer {
         this.destlongitude = destlongitude;
     }
 
-    /* public int getDay() {
+    public int getDay() {
         return day;
     }
 
     public void setDay(int day) {
         this.day = day;
-    } */
+    }
 }
