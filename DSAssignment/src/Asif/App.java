@@ -169,7 +169,14 @@ public class App {
         System.out.println();
         System.out.println("The request is received, please choose your driver...");
         System.out.println();
+        
+        customerViewDrvCheck(time, cstmr, drvr, c);
                 
+        return true;    
+    }
+    
+    // Check driver availability
+    public static void customerViewDrvCheck(FakeTime time, LinkedList<Customer> cstmr, LinkedList<Driver> drvr, Customer c) {
         // Customer info for checking available drivers
         int capacity = c.getCapacity();
         long EAT = c.getTime();
@@ -177,6 +184,12 @@ public class App {
         double custlon1 = c.getStartlongitude();
         double custlat2 = c.getDestlatitude();
         double custlon2 = c.getDestlongitude();
+        
+        // To store driver info
+        double dlat1;
+        double dlon1;
+        double distance;
+        long DT;
                    
         /* This only works if the time required to ferry the customer to destination is less than one day, the EAT format in
         the question doesn't allow for more than day of time */
@@ -184,24 +197,23 @@ public class App {
             Driver d = drvr.get(i);
                     
             if (d.getCapacity() >= capacity) {
-                double dlat1 = d.getLatitude();
-                double dlon1 = d.getLongitude();
+                dlat1 = d.getLatitude();
+                dlon1 = d.getLongitude();
                         
                 // Distance from driver to customer and from customer to destination
-                double distance = distance(dlat1, dlon1, custlat1, custlon1) + distance(custlat1, custlon1, custlat2, custlon2);
+                distance = distance(dlat1, dlon1, custlat1, custlon1) + distance(custlat1, custlon1, custlat2, custlon2);
                 System.out.println(distance);
                         
-                long DT = (long) (distance / d.getSpeed());
+                DT = (long) (distance / d.getSpeed());
                 System.out.println(DT);
                         
-                if (!(DT > 1440)) {
+                /*if (!(DT > 1440)) {
                     if (time.checkFormat(EAT, DT)) {
-                        System.out.println(d.getCapacity());
+                        
                     }
-                }
+                } */
             }
         }
-        return true;    
     }
     
     // This could use some work                                                 ~~~~~
@@ -251,7 +263,7 @@ public class App {
     }
     
     /* Haversine method to calculate the distance between two geographical coordinates
-    It has been modified to not take elevation into consideration */
+    It has been modified to not take elevation into consideration
     public static double distance(double lat1, double lat2, double lon1, double lon2) {
         final int R = 6371; // Radius of the earth
 
@@ -263,7 +275,14 @@ public class App {
             * Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
         
         double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-        double distance = R * c * 1000; // convert to meters
+        double distance = R * c; 
+        
+        return distance; // Returned in km
+    } */
+    
+    // Spherical law of cosines to calculate distance between two geographical coordinates
+    public static double distance(double lat1, double lat2, double lon1, double lon2) {
+        double distance = Math.acos(Math.sin(lat1) * Math.sin(lat2) + Math.cos(lat1) * Math.cos(lat2) * Math.cos(lon2-lon1)) * 6371;
         
         return distance;
     }
