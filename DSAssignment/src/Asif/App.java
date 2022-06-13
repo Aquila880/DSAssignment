@@ -30,14 +30,12 @@ public class App {
         cstmr.add(new Customer("Adam", "pending", 1730, 4, 31.62, 2.91, -76.66, 5.1));
         cstmr.add(new Customer("Kobe", "waiting", 1840, 5, -3.62, -42.91, 76.66, -5.1));
         
-        drvr.add(new Driver("available", 5, 34.65, 9.12));
-        drvr.add(new Driver("not available", 5, 3.65, 91.12));
-        drvr.add(new Driver("available", 4, -34.23, 77.65));
+        drvr.add(new Driver("Ralph", "available", 5, 34.65, 9.12));
+        drvr.add(new Driver("Alfie", "not available", 5, 3.65, 91.12));
+        drvr.add(new Driver("Mara", "available", 4, -34.23, 77.65));
         
         // Timer object to rerun method after specified time
         Timer timer = new Timer();
-        double d = distance(9.12, 34.65, 9.15, 34.69);
-        System.out.println(d);
         
         // Main program
         while(true) {
@@ -56,8 +54,11 @@ public class App {
                         //}
                     //}, 0, 5000);
                     break;
+                case "C":
+                    driverView(time, drvr);
+                    break;
                 default:
-                    System.out.println("Driver overview");
+                    System.out.println("Enter A, B or C");
                     break;
             }
         }
@@ -146,8 +147,9 @@ public class App {
     public static boolean customerViewA(FakeTime time, LinkedList<Customer> cstmr, LinkedList<Driver> drvr) {
         Customer c = new Customer();
         while(true) {
+            // >> John 1730 5 latitude longitude latitude longitude
             System.out.println("Enter the details of the customer you want to create (name, Expected arrival time, capacity, starting point, destination)");
-            System.out.println("(Enter \"exit\" to go back to homepage):");
+            System.out.println("(Enter \"exit\" to go back to homepage):"); 
             System.out.print(">> ");
                     
             // Take customer info from user
@@ -216,10 +218,10 @@ public class App {
         }
     }
     
-    // This could use some work                                                 ~~~~~
+    // These two methods could use some work                                    ~~~~~
     public static boolean createCustomerCheck(String s) {
         String[] string = s.split(" ");
-        // >> John 1730 5 latitude, longitude, latitude, longitude
+        // >> John 1730 5 latitude longitude latitude longitude
         
         if (string.length == 7) {
             String name = string[0];
@@ -260,6 +262,128 @@ public class App {
         c = new Customer(name, "waiting", time, capacity, lat1, lon1, lat2, lon2);
         
         return c;
+    }
+    
+    // C - Add / Remove Driver
+    public static void driverView(FakeTime time, LinkedList<Driver> drvr) {
+        Scanner sc = new Scanner(System.in);
+        
+        while (true) {
+            System.out.println("Are you trying to add or remove a driver? (Enter \"exit\" to go back to homepage):");
+            System.out.println("Options:");
+            System.out.println("A - Add new driver");
+            System.out.println("B - Remove driver");
+            System.out.println();
+            
+            String s = sc.next();
+            
+            // Exit back to homepage
+            if (s.equals("exit")) break;
+            
+            if (s.equals("A")) {
+                driverViewA(drvr);
+            }
+            
+            if (s.equals("B")) {
+                System.out.println();
+                driverViewB(time, drvr);
+            }
+        }
+    }
+    
+    // CA - Add driver
+    public static void driverViewA(LinkedList<Driver> drvr) {
+        Scanner sc = new Scanner(System.in);
+        Driver d = new Driver();
+        
+        while(true) {
+            // Take driver info from user
+            System.out.println("Enter the details of the driver you want to create (name, capacity, location):"); // John 5 latitude longitude
+            String s = sc.nextLine();
+            System.out.println();
+        
+            if (createDriverCheck(s)) {
+                d = createDriver(s);
+                drvr.addLast(d);
+                System.out.println("Driver is successfully registered!\n");
+                break;
+            }
+        }
+    }
+    
+    public static boolean createDriverCheck(String s) {
+        String[] string = s.split(" ");
+        // >> John 5 latitude longitude
+        
+        if (string.length == 4) {
+            String name = string[0];
+            int capacity = Integer.parseInt(string[1]);
+            
+            double lat1 = Double.parseDouble(string[2]);
+            double lon1 = Double.parseDouble(string[3]);
+            
+            if ((lat1 <= 90 && lat1 >= -90) && (lon1 <= 180 && lon1 >= -180)) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+    
+    public static Driver createDriver(String s) {
+        Driver d;
+        String[] string = s.split(" ");
+        
+        String name = string[0];
+        int capacity = Integer.parseInt(string[1]);
+            
+        double lat1 = Double.parseDouble(string[2]);
+        double lon1 = Double.parseDouble(string[3]);
+        
+        d = new Driver(name, "available", capacity, lat1, lon1);
+        
+        return d;
+    }
+    
+    // CB - Remove driver
+    public static void driverViewB(FakeTime time, LinkedList<Driver> drvr) {
+        Timer timer = new Timer();
+        Scanner sc = new Scanner(System.in);
+        int x;
+        
+        // List update function needs to be written here                        ~~~~~~
+        long listtime = time.currentTime();
+        
+        while(true) {
+            // Drivers list
+            System.out.printf("Requests List (List Last Updated Time : %04d\n", listtime); 
+            System.out.printf("(Current time : %04d)\n", time.currentTime());
+            System.out.println("=====================================================================");
+            System.out.println("Driver A   Status         Capacity   Location            Customer");
+            for (int i = 0; i < drvr.getSize(); i++) {
+                System.out.println("Driver " + (i + 1) + "   " + drvr.get(i).dashInfo());
+            }
+            System.out.println("=====================================================================\n");
+            
+            System.out.println("Enter the number of the driver you want to delete (Enter 0 to go back to homepage):");
+            System.out.print(">> ");
+            
+            // Take the number of driver to be removed from user
+            x = sc.nextInt();
+            System.out.println();
+            
+            // Exit back to homepage
+            if (x == 0) {
+                break;
+            }
+            
+            // User inputs valid driver number to be removed
+            if (x > 0 && x <= drvr.getSize()) {
+                drvr.remove(x - 1);
+                System.out.println("Driver " + x + " has been removed.");
+                System.out.println();
+            }
+        }
     }
     
     /* Haversine method to calculate the distance between two geographical coordinates

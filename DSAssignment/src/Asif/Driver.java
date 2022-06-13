@@ -3,7 +3,7 @@ package Asif;
 public class Driver {
     private int capacity;
     private double latitude, longitude;
-    private String status;
+    private String status, name;
     private Customer customer;
     double speed = 1000; // m/s
 
@@ -11,7 +11,7 @@ public class Driver {
     
     }
     
-    public Driver(String status, int capacity, double latitude, double longitude) {
+    public Driver(String name, String status, int capacity, double latitude, double longitude) {
         this.status = status;
         this.capacity = capacity;
         this.latitude = latitude;
@@ -80,5 +80,13 @@ public class Driver {
 
     public void setSpeed(double speed) {
         this.speed = speed;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }
