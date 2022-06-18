@@ -6,6 +6,8 @@ public class Customer {
     private int capacity, day; // to check the day the customer request was made
     // expected arrival time
     private long time;
+    private long pickuptime; // the time when the driver will pickup
+    private long dropofftime; // the time when the customer reaches their destination
     private double startlatitude, startlongitude;
     private double destlatitude, destlongitude;
 

@@ -3,8 +3,10 @@ package Asif;
 import java.util.Scanner;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.TimeUnit;
 
 public class App {
     
@@ -30,9 +32,9 @@ public class App {
         cstmr.add(new Customer("Adam", "pending", 1730, 4, 31.62, 2.91, -76.66, 5.1));
         cstmr.add(new Customer("Kobe", "waiting", 1840, 5, -3.62, -42.91, 76.66, -5.1));
         
-        drvr.add(new Driver("Ralph", "available", 5, 34.65, 9.12));
-        drvr.add(new Driver("Alfie", "not available", 5, 3.65, 91.12));
-        drvr.add(new Driver("Mara", "available", 4, -34.23, 77.65));
+        drvr.add(new Driver("Ralph", "available", 5, 3.1325, 101.6304));
+        drvr.add(new Driver("Alfie", "not available", 5, 3.1134, 101.6626));
+        drvr.add(new Driver("Mara", "available", 4, 3.1157, 101.6521));
         
         // Timer object to rerun method after specified time
         Timer timer = new Timer();
@@ -177,7 +179,7 @@ public class App {
         return true;    
     }
     
-    // Check driver availability
+    // Show customer driver availability
     public static void customerViewDrvCheck(FakeTime time, LinkedList<Customer> cstmr, LinkedList<Driver> drvr, Customer c) {
         // Customer info for checking available drivers
         int capacity = c.getCapacity();
@@ -192,31 +194,70 @@ public class App {
         double dlon1;
         double distance;
         long DT;
-                   
+        
+        // Pickup and dropoff distances/times
+        double d1;
+        double d2;
+        long t1 = 0;
+        long t2 = 0;
+        
+        System.out.println("Driver Availability:");
+        // List update function needs to be written here                        ~~~~~~
+        long listtime = time.currentTime();
+        System.out.printf("Requests List (List Last Updated Time : %04d\n", listtime); 
+        System.out.printf("(Current time : %04d)\n", time.currentTime());
+        long diff = time.convToSeconds(time.currentTime()) - time.convToSeconds(listtime);
+        System.out.println("=================================================");
+        System.out.println("Driver    Capacity    Estimated Arrival Time  Reputation");
+        
         /* This only works if the time required to ferry the customer to destination is less than one day, the EAT format in
         the question doesn't allow for more than day of time */
+        ArrayList<Integer> list = new ArrayList<Integer>();
+        
         for (int i = 0; i < drvr.getSize(); i++) {
             Driver d = drvr.get(i);
                     
-            if (d.getCapacity() >= capacity) {
-                dlat1 = d.getLatitude();
-                dlon1 = d.getLongitude();
+            if (d.getStatus().equals("available")) {
+                if (d.getCapacity() >= capacity) {
+                    dlat1 = d.getLatitude();
+                    dlon1 = d.getLongitude();
                         
-                // Distance from driver to customer and from customer to destination
-                distance = distance(dlat1, dlon1, custlat1, custlon1) + distance(custlat1, custlon1, custlat2, custlon2);
-                System.out.println(distance);
-                        
-                DT = (long) (distance / d.getSpeed());
-                System.out.println(DT);
-                        
-                /*if (!(DT > 1440)) {
-                    if (time.checkFormat(EAT, DT)) {
-                        
+                    // Distance from driver to customer and from customer to destination
+                    d1 = distance(dlat1, custlat1, dlon1, custlon1);
+                    d2 = distance(custlat1, custlat2, custlon1, custlon2);
+                    distance = distance(dlat1, custlat1, dlon1, custlon1) + distance(custlat1, custlat2, custlon1, custlon2);
+                    
+                    t1 = (long) (d1 / d.getSpeed());
+                    t1 = time.convToSeconds(time.currentTime()) + t1;
+                    t1 = time.convToFormat(t1);
+                    t2 = (long) (d1 / d.getSpeed());
+                    t2 = time.convToSeconds(time.currentTime()) + t2;
+                    t2 = time.convToFormat(t2);
+                    DT = (long) (distance / d.getSpeed());
+                    
+                    if (!(DT > 1440)) {
+                        if (time.checkFormat(EAT, DT, diff)) {
+                            DT = time.convToSeconds(time.currentTime()) + DT;
+                            DT = time.convToFormat(DT);
+                            System.out.printf("Driver " + (i + 1) + "  " + drvr.get(i).getCapacity() + "           " + DT + "                    %.1f/5.0\n", drvr.get(i).getRep());
+                            list.add(i);
+                        }
                     }
-                } */
+                }    
             }
         }
+        
+        customerViewDrvPick(time, cstmr, drvr, c, t1, t2);
     }
+    
+    // Let customer pick Driver
+    public static void customerViewDrvPick(FakeTime time, LinkedList<Customer> cstmr, LinkedList<Driver> drvr, Customer c, long t1, long t2) {
+        try {
+            TimeUnit.SECONDS.sleep(1);
+        } catch(InterruptedException ex) {
+          ex.printStackTrace();
+        }
+    }   
     
     // These two methods could use some work                                    ~~~~~
     public static boolean createCustomerCheck(String s) {
@@ -224,9 +265,7 @@ public class App {
         // >> John 1730 5 latitude longitude latitude longitude
         
         if (string.length == 7) {
-            String name = string[0];
             long time = Long.parseLong(string[1]);
-            int capacity = Integer.parseInt(string[2]);
             
             double lat1 = Double.parseDouble(string[3]);
             double lon1 = Double.parseDouble(string[4]);
@@ -347,7 +386,6 @@ public class App {
     
     // CB - Remove driver
     public static void driverViewB(FakeTime time, LinkedList<Driver> drvr) {
-        Timer timer = new Timer();
         Scanner sc = new Scanner(System.in);
         int x;
         
@@ -365,7 +403,7 @@ public class App {
             }
             System.out.println("=====================================================================\n");
             
-            System.out.println("Enter the number of the driver you want to delete (Enter 0 to go back to homepage):");
+            System.out.println("Enter the number of the driver you want to delete (Enter 0 to go back to previous menu):");
             System.out.print(">> ");
             
             // Take the number of driver to be removed from user
@@ -383,11 +421,14 @@ public class App {
                 System.out.println("Driver " + x + " has been removed.");
                 System.out.println();
             }
+            else {
+                System.out.println("Please select a driver number in the list");
+            }
         }
     }
     
     /* Haversine method to calculate the distance between two geographical coordinates
-    It has been modified to not take elevation into consideration
+    It has been modified to not take elevation into consideration */
     public static double distance(double lat1, double lat2, double lon1, double lon2) {
         final int R = 6371; // Radius of the earth
 
@@ -399,15 +440,15 @@ public class App {
             * Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
         
         double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-        double distance = R * c; 
+        double distance = R * c * 1000; // Returned in meters
         
-        return distance; // Returned in km
-    } */
+        return distance;
+    }
     
-    // Spherical law of cosines to calculate distance between two geographical coordinates
+    /* Spherical law of cosines to calculate distance between two geographical coordinates
     public static double distance(double lat1, double lat2, double lon1, double lon2) {
         double distance = Math.acos(Math.sin(lat1) * Math.sin(lat2) + Math.cos(lat1) * Math.cos(lat2) * Math.cos(lon2-lon1)) * 6371;
         
         return distance;
-    }
+    } */
 }

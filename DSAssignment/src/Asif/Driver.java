@@ -1,23 +1,28 @@
 package Asif;
 
+import java.util.Random;
+
 public class Driver {
     private int capacity;
     private double latitude, longitude;
     private String status, name;
     private Customer customer;
-    double speed = 1000; // m/s
+    private double speed = 500; // m/s (m/minute in faketime)
+    private double rep;
 
     public Driver() {
     
     }
     
     public Driver(String name, String status, int capacity, double latitude, double longitude) {
+        Random rand = new Random();
         this.status = status;
         this.capacity = capacity;
         this.latitude = latitude;
         this.longitude = longitude;
         customer = new Customer();
         customer.setName("-");
+        this.rep = 4 + rand.nextDouble();
     }
     
     // Print driver information for admin dashboard
@@ -88,5 +93,13 @@ public class Driver {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public double getRep() {
+        return rep;
+    }
+
+    public void setRep(double rep) {
+        this.rep = rep;
     }
 }

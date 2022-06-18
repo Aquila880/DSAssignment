@@ -89,16 +89,16 @@ public class FakeTime {
     
     // Checks if Driving time is less than Expected Arrival Time
     // EAT is in format, while T is in seconds
-    public boolean checkFormat(long EAT, long DT) {
+    public boolean checkFormat(long EAT, long DT, long diff) {
         EAT = convToSeconds(EAT);
-        DT = DT + 5; // Since list is automatically updated only after 5 seconds
+        DT = DT + diff; // The difference between list update time and customer request
         long currentTime = convToSeconds(currentTime());
         
         if (EAT < currentTime) {
             EAT = EAT + 1440;
         }
         
-        if (DT <= EAT) {
+        if ((DT + currentTime) <= EAT) {
             return true;
         }
         
