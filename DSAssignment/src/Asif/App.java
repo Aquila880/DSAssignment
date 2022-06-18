@@ -23,8 +23,8 @@ public class App {
         FakeTime time = new FakeTime(realstartTime);
         
         // Example customers and drivers
-        LinkedList<Customer> cstmr = new LinkedList<Customer>();
-        LinkedList<Driver> drvr = new LinkedList<Driver>();
+        LinkedList<Customer> cstmr = new LinkedList<>();
+        LinkedList<Driver> drvr = new LinkedList<>();
         
         // Dashboard check
         cstmr.add(new Customer("Ray", "reached", 1450, 5, 3.1198, 101.6401, 3.1157, 101.6521));
@@ -37,9 +37,6 @@ public class App {
         drvr.add(new Driver("Ralph", "available", 5, 3.1325, 101.6304));
         drvr.add(new Driver("Alfie", "not available", 5, 3.1134, 101.6626));
         drvr.add(new Driver("Mara", "available", 4, 3.1157, 101.6521));
-        
-        // Timer object to rerun method after specified time
-        Timer timer = new Timer();
         
         // Main program
         while(true) {
@@ -54,7 +51,7 @@ public class App {
                     //timer.schedule(new TimerTask() {
                         //@Override
                         //public void run() {
-                            customerView(time, cstmr, drvr);
+                    customerView(time, cstmr, drvr);
                         //}
                     //}, 0, 5000);
                     break;
@@ -122,7 +119,6 @@ public class App {
     
     // B - Customer View related section
     public static void customerView(FakeTime time, LinkedList<Customer> cstmr, LinkedList<Driver> drvr) {
-        main:
         while(true) {
             System.out.println("You are in customer view now (Enter \"exit\" to go back to homepage):");
             System.out.println("Options :");
@@ -141,14 +137,14 @@ public class App {
             if (s.equals("A")) {
                 boolean b = customerViewA(time, cstmr, drvr);
                 if (b == false) {
-                    break main;
+                    break;
                 }
             }
             
             // Update customer requests
             if (s.equals("B")) {
                 customerViewB(time, cstmr, drvr);
-                break main;
+                break;
                 
             }
         }
@@ -202,13 +198,7 @@ public class App {
         double dlat1;
         double dlon1;
         double distance;
-        long DT;
-        
-        // Pickup and dropoff distances/times
-        double d1;
-        double d2;
-        long t1 = 0;
-        long t2 = 0;
+        long DT;   
         
         while(true) {
             System.out.println("Driver Availability:");
@@ -222,7 +212,7 @@ public class App {
         
             /* This only works if the time required to ferry the customer to destination is less than one day, the EAT format in
             the question doesn't allow for more than day of time */
-            ArrayList<Integer> list = new ArrayList<Integer>();
+            ArrayList<Integer> list = new ArrayList<>();
         
             for (int i = 0; i < drvr.getSize(); i++) {
                 Driver d = drvr.get(i);
@@ -233,8 +223,6 @@ public class App {
                         dlon1 = d.getLongitude();
                         
                         // Distance from driver to customer and from customer to destination
-                        d1 = distance(dlat1, custlat1, dlon1, custlon1);
-                        d2 = distance(custlat1, custlat2, custlon1, custlon2);
                         distance = distance(dlat1, custlat1, dlon1, custlon1) + distance(custlat1, custlat2, custlon1, custlon2);
                         
                         DT = (long) (distance / d.getSpeed());
@@ -254,7 +242,7 @@ public class App {
             if (b == false) {
                 break;
             }
-        }
+        }  
     }
     
     // Let customer pick Driver
@@ -323,15 +311,15 @@ public class App {
                 return false;
             }
         } catch(InterruptedException ex) {
-            ex.printStackTrace();
+            
         }
         return true;
     }
     
-    // Update customer requests
+    // BB - Update customer requests
     public static void customerViewB(FakeTime time, LinkedList<Customer> cstmr, LinkedList<Driver> drvr) {
         for (int i = 0; i < cstmr.getSize(); i++) {
-            if (cstmr.get(i).getStatus() == "pending") {
+            if (cstmr.get(i).getStatus().equals("pending")) {
                 customerViewADrvCheck(time, cstmr, drvr, cstmr.get(i));
             }
         }
@@ -411,7 +399,7 @@ public class App {
     // CA - Add driver
     public static void driverViewA(LinkedList<Driver> drvr) {
         Scanner sc = new Scanner(System.in);
-        Driver d = new Driver();
+        Driver d;
         
         while(true) {
             // Take driver info from user
@@ -433,9 +421,6 @@ public class App {
         // >> John 5 latitude longitude
         
         if (string.length == 4) {
-            String name = string[0];
-            int capacity = Integer.parseInt(string[1]);
-            
             double lat1 = Double.parseDouble(string[2]);
             double lon1 = Double.parseDouble(string[3]);
             
