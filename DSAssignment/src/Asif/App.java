@@ -27,10 +27,12 @@ public class App {
         LinkedList<Driver> drvr = new LinkedList<Driver>();
         
         // Dashboard check
-        cstmr.add(new Customer("Ray", "reached", 1450, 5, 9.26, -78.31, 1.11, -91.23));
-        cstmr.add(new Customer("John", "picked up", 1730, 5, 3.62, 42.91, 76.66, 5.1));
-        cstmr.add(new Customer("Adam", "pending", 1730, 4, 31.62, 2.91, -76.66, 5.1));
-        cstmr.add(new Customer("Kobe", "waiting", 1840, 5, -3.62, -42.91, 76.66, -5.1));
+        cstmr.add(new Customer("Ray", "reached", 1450, 5, 3.1198, 101.6401, 3.1157, 101.6521));
+        cstmr.add(new Customer("John", "picked up", 1730, 5, 3.1368, 101.6400, 3.1325, 101.6304));
+        cstmr.add(new Customer("Adam", "pending", 1730, 4, 3.1157, 101.6304, 3.1325, 101.6626));
+        cstmr.add(createCustomer("Kobe 1840 5 3.1368 101.6626 3.1134 101.6521"));
+       
+        
         
         drvr.add(new Driver("Ralph", "available", 5, 3.1325, 101.6304));
         drvr.add(new Driver("Alfie", "not available", 5, 3.1134, 101.6626));
@@ -142,6 +144,13 @@ public class App {
                     break main;
                 }
             }
+            
+            // Update customer requests
+            if (s.equals("B")) {
+                customerViewB(time, cstmr, drvr);
+                break main;
+                
+            }
         }
     }
     
@@ -241,7 +250,7 @@ public class App {
                     }    
                 }
             }
-            boolean b = customerViewADrvPick(time, drvr, c, list);
+            boolean b = customerViewADrvPick(time, cstmr, drvr, c, list);
             if (b == false) {
                 break;
             }
@@ -249,7 +258,7 @@ public class App {
     }
     
     // Let customer pick Driver
-    public static boolean customerViewADrvPick(FakeTime time, LinkedList<Driver> drvr, Customer c, ArrayList<Integer> list) {
+    public static boolean customerViewADrvPick(FakeTime time, LinkedList<Customer> cstmr, LinkedList<Driver> drvr, Customer c, ArrayList<Integer> list) {
         Scanner sc = new Scanner(System.in);
         int y;
         
@@ -267,7 +276,7 @@ public class App {
         
         // Pickup and dropoff distances/times
         double d1;
-        long t1 = 0;
+        long t1;
         
         System.out.println("Enter the number of the driver you want to select (Enter 0 to go back to previous menu):");
         System.out.print(">> ");
@@ -279,6 +288,7 @@ public class App {
             
             // Exit back to previous menu
             if (x == 0) {
+                cstmr.get(cstmr.getSize() - 1).setStatus("pending");
                 return false;
             }
             
@@ -316,7 +326,16 @@ public class App {
             ex.printStackTrace();
         }
         return true;
-    }   
+    }
+    
+    // Update customer requests
+    public static void customerViewB(FakeTime time, LinkedList<Customer> cstmr, LinkedList<Driver> drvr) {
+        for (int i = 0; i < cstmr.getSize(); i++) {
+            if (cstmr.get(i).getStatus() == "pending") {
+                customerViewADrvCheck(time, cstmr, drvr, cstmr.get(i));
+            }
+        }
+    }
     
     // These two methods could use some work                                    ~~~~~
     public static boolean createCustomerCheck(String s) {
@@ -510,4 +529,12 @@ public class App {
         
         return distance;
     } */
+    
+    /*public static FakeTime driverUpdate() {
+        
+    }*/
+    
+    /*public static Faketime customerUpdate() {
+        
+    }*/
 }
