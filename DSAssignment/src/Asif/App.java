@@ -174,13 +174,13 @@ public class App {
         System.out.println("The request is received, please choose your driver...");
         System.out.println();
         
-        customerViewDrvCheck(time, cstmr, drvr, c);
+        customerViewADrvCheck(time, cstmr, drvr, c);
                 
         return true;    
     }
     
     // Show customer driver availability
-    public static void customerViewDrvCheck(FakeTime time, LinkedList<Customer> cstmr, LinkedList<Driver> drvr, Customer c) {
+    public static void customerViewADrvCheck(FakeTime time, LinkedList<Customer> cstmr, LinkedList<Driver> drvr, Customer c) {
         // Customer info for checking available drivers
         int capacity = c.getCapacity();
         long EAT = c.getTime();
@@ -201,62 +201,121 @@ public class App {
         long t1 = 0;
         long t2 = 0;
         
-        System.out.println("Driver Availability:");
-        // List update function needs to be written here                        ~~~~~~
-        long listtime = time.currentTime();
-        System.out.printf("Requests List (List Last Updated Time : %04d\n", listtime); 
-        System.out.printf("(Current time : %04d)\n", time.currentTime());
-        long diff = time.convToSeconds(time.currentTime()) - time.convToSeconds(listtime);
-        System.out.println("=================================================");
-        System.out.println("Driver    Capacity    Estimated Arrival Time  Reputation");
+        while(true) {
+            System.out.println("Driver Availability:");
+            // List update function needs to be written here                        ~~~~~~
+            long listtime = time.currentTime();
+            System.out.printf("Requests List (List Last Updated Time : %04d\n", listtime); 
+            System.out.printf("(Current time : %04d)\n", time.currentTime());
+            long diff = time.convToSeconds(time.currentTime()) - time.convToSeconds(listtime);
+            System.out.println("=================================================");
+            System.out.println("Driver    Capacity    Estimated Arrival Time  Reputation");
         
-        /* This only works if the time required to ferry the customer to destination is less than one day, the EAT format in
-        the question doesn't allow for more than day of time */
-        ArrayList<Integer> list = new ArrayList<Integer>();
+            /* This only works if the time required to ferry the customer to destination is less than one day, the EAT format in
+            the question doesn't allow for more than day of time */
+            ArrayList<Integer> list = new ArrayList<Integer>();
         
-        for (int i = 0; i < drvr.getSize(); i++) {
-            Driver d = drvr.get(i);
+            for (int i = 0; i < drvr.getSize(); i++) {
+                Driver d = drvr.get(i);
                     
-            if (d.getStatus().equals("available")) {
-                if (d.getCapacity() >= capacity) {
-                    dlat1 = d.getLatitude();
-                    dlon1 = d.getLongitude();
+                if (d.getStatus().equals("available")) {
+                    if (d.getCapacity() >= capacity) {
+                        dlat1 = d.getLatitude();
+                        dlon1 = d.getLongitude();
                         
-                    // Distance from driver to customer and from customer to destination
-                    d1 = distance(dlat1, custlat1, dlon1, custlon1);
-                    d2 = distance(custlat1, custlat2, custlon1, custlon2);
-                    distance = distance(dlat1, custlat1, dlon1, custlon1) + distance(custlat1, custlat2, custlon1, custlon2);
+                        // Distance from driver to customer and from customer to destination
+                        d1 = distance(dlat1, custlat1, dlon1, custlon1);
+                        d2 = distance(custlat1, custlat2, custlon1, custlon2);
+                        distance = distance(dlat1, custlat1, dlon1, custlon1) + distance(custlat1, custlat2, custlon1, custlon2);
+                        
+                        DT = (long) (distance / d.getSpeed());
                     
-                    t1 = (long) (d1 / d.getSpeed());
-                    t1 = time.convToSeconds(time.currentTime()) + t1;
-                    t1 = time.convToFormat(t1);
-                    t2 = (long) (d1 / d.getSpeed());
-                    t2 = time.convToSeconds(time.currentTime()) + t2;
-                    t2 = time.convToFormat(t2);
-                    DT = (long) (distance / d.getSpeed());
-                    
-                    if (!(DT > 1440)) {
-                        if (time.checkFormat(EAT, DT, diff)) {
-                            DT = time.convToSeconds(time.currentTime()) + DT;
-                            DT = time.convToFormat(DT);
-                            System.out.printf("Driver " + (i + 1) + "  " + drvr.get(i).getCapacity() + "           " + DT + "                    %.1f/5.0\n", drvr.get(i).getRep());
-                            list.add(i);
+                        if (!(DT > 1440)) {
+                            if (time.checkFormat(EAT, DT, diff)) {
+                                DT = time.convToSeconds(time.currentTime()) + DT;
+                                DT = time.convToFormat(DT);
+                                System.out.printf("Driver " + (i + 1) + "  " + drvr.get(i).getCapacity() + "           " + DT + "                    %.1f/5.0\n", drvr.get(i).getRep());
+                                list.add(i);
+                            }
                         }
-                    }
-                }    
+                    }    
+                }
+            }
+            boolean b = customerViewADrvPick(time, drvr, c, list);
+            if (b == false) {
+                break;
             }
         }
-        
-        customerViewDrvPick(time, cstmr, drvr, c, t1, t2);
     }
     
     // Let customer pick Driver
-    public static void customerViewDrvPick(FakeTime time, LinkedList<Customer> cstmr, LinkedList<Driver> drvr, Customer c, long t1, long t2) {
+    public static boolean customerViewADrvPick(FakeTime time, LinkedList<Driver> drvr, Customer c, ArrayList<Integer> list) {
+        Scanner sc = new Scanner(System.in);
+        int y;
+        
+        // Customer info for checking available drivers
+        double custlat1 = c.getStartlatitude();
+        double custlon1 = c.getStartlongitude();
+        double custlat2 = c.getDestlatitude();
+        double custlon2 = c.getDestlongitude();
+        
+        // To store driver info
+        double dlat1;
+        double dlon1;
+        double distance;
+        long DT;
+        
+        // Pickup and dropoff distances/times
+        double d1;
+        long t1 = 0;
+        
+        System.out.println("Enter the number of the driver you want to select (Enter 0 to go back to previous menu):");
+        System.out.print(">> ");
         try {
-            TimeUnit.SECONDS.sleep(1);
+            // Take the number of driver to be removed from user
+            int x = sc.nextInt();
+            y = x - 1;
+            System.out.println();
+            
+            // Exit back to previous menu
+            if (x == 0) {
+                return false;
+            }
+            
+            // User inputs valid driver number to pick driver
+            if (list.contains(y)) {
+                Driver d = drvr.get(y);
+                dlat1 = d.getLatitude();
+                dlon1 = d.getLongitude();
+                        
+                // Distance from driver to customer and from customer to destination
+                d1 = distance(dlat1, custlat1, dlon1, custlon1);
+                distance = distance(dlat1, custlat1, dlon1, custlon1) + distance(custlat1, custlat2, custlon1, custlon2);
+                
+                // Time from driver to customer and from customer to destination
+                t1 = (long) (d1 / d.getSpeed());
+                t1 = time.convToSeconds(time.currentTime()) + t1;
+                t1 = time.convToFormat(t1);
+                DT = (long) (distance / d.getSpeed());
+                DT = time.convToSeconds(time.currentTime()) + DT;
+                DT = time.convToFormat(DT);
+                
+                // Set values for later when updating list
+                c.setPickuptime(t1);
+                c.setDropofftime(DT);
+                c.setDay(time.getDay());
+                drvr.get(y).setDropofftime(DT);
+                
+                System.out.println("Driver " + x + " is on the way to pick you up.");
+                
+                // Return to prev menu
+                TimeUnit.SECONDS.sleep(1);
+                return false;
+            }
         } catch(InterruptedException ex) {
-          ex.printStackTrace();
+            ex.printStackTrace();
         }
+        return true;
     }   
     
     // These two methods could use some work                                    ~~~~~
@@ -422,7 +481,7 @@ public class App {
                 System.out.println();
             }
             else {
-                System.out.println("Please select a driver number in the list");
+                System.out.println("Please select a number from the list");
             }
         }
     }

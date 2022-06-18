@@ -9,6 +9,7 @@ public class Driver {
     private Customer customer;
     private double speed = 500; // m/s (m/minute in faketime)
     private double rep;
+    private long dropofftime;
 
     public Driver() {
     
@@ -101,5 +102,13 @@ public class Driver {
 
     public void setRep(double rep) {
         this.rep = rep;
+    }
+
+    public long getDropofftime() {
+        return dropofftime;
+    }
+
+    public void setDropofftime(long dropofftime) {
+        this.dropofftime = dropofftime;
     }
 }

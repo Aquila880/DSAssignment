@@ -198,4 +198,20 @@ public class Customer {
     public void setDay(int day) {
         this.day = day;
     }
+
+    public long getPickuptime() {
+        return pickuptime;
+    }
+
+    public void setPickuptime(long pickuptime) {
+        this.pickuptime = pickuptime;
+    }
+
+    public long getDropofftime() {
+        return dropofftime;
+    }
+
+    public void setDropofftime(long dropofftime) {
+        this.dropofftime = dropofftime;
+    }
 }
