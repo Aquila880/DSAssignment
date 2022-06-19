@@ -27,16 +27,16 @@ public class App {
         LinkedList<Driver> drvr = new LinkedList<>();
         
         // Dashboard check
-        cstmr.add(new Customer("Ray", "reached", 1450, 5, 3.1198, 101.6401, 3.1157, 101.6521));
-        cstmr.add(new Customer("John", "picked up", 1730, 5, 3.1368, 101.6400, 3.1325, 101.6304));
+        // cstmr.add(new Customer("Ray", "reached", 1450, 5, 3.1198, 101.6401, 3.1157, 101.6521));
+        // cstmr.add(new Customer("John", "picked up", 1730, 5, 3.1368, 101.6400, 3.1325, 101.6304));
         cstmr.add(new Customer("Adam", "pending", 1730, 4, 3.1157, 101.6304, 3.1325, 101.6626));
-        cstmr.add(createCustomer("Kobe 1840 5 3.1368 101.6626 3.1134 101.6521"));
+        // cstmr.add(createCustomer("Kobe 1840 5 3.1368 101.6626 3.1134 101.6521"));
        
         
         
         drvr.add(new Driver("Ralph", "available", 5, 3.1325, 101.6304));
-        drvr.add(new Driver("Alfie", "not available", 5, 3.1134, 101.6626));
-        drvr.add(new Driver("Mara", "available", 4, 3.1157, 101.6521));
+        drvr.add(new Driver("Alfie", "available", 5, 3.1134, 101.6626));
+        drvr.add(new Driver("Mara", "available", 5, 3.1157, 101.6521));
         
         // Main program
         while(true) {
@@ -56,7 +56,7 @@ public class App {
                     //}, 0, 5000);
                     break;
                 case "C":
-                    driverView(time, drvr);
+                    driverView(time, cstmr, drvr);
                     break;
                 default:
                     System.out.println("Enter A, B or C");
@@ -94,7 +94,7 @@ public class App {
     public static void sysDash(FakeTime time, LinkedList<Customer> cstmr, LinkedList<Driver> drvr) {
         
         // List update function needs to be written here                        ~~~~~~
-        long listtime = time.currentTime();
+        long listtime = listUpdate(time, cstmr, drvr);
         
         // Customer requests list
         System.out.printf("Requests List (List Last Updated Time : %04d\n", listtime); 
@@ -203,7 +203,7 @@ public class App {
         while(true) {
             System.out.println("Driver Availability:");
             // List update function needs to be written here                        ~~~~~~
-            long listtime = time.currentTime();
+            long listtime = listUpdate(time, cstmr, drvr);
             System.out.printf("Requests List (List Last Updated Time : %04d\n", listtime); 
             System.out.printf("(Current time : %04d)\n", time.currentTime());
             long diff = time.convToSeconds(time.currentTime()) - time.convToSeconds(listtime);
@@ -268,18 +268,18 @@ public class App {
         
         System.out.println("Enter the number of the driver you want to select (Enter 0 to go back to previous menu):");
         System.out.print(">> ");
+        
+        // Take the number of driver to be removed from user
+        int x = sc.nextInt();
+        y = x - 1;
+        System.out.println();
+            
+        // Exit back to previous menu
+        if (x == 0) {
+            cstmr.get(cstmr.getSize() - 1).setStatus("pending");
+            return false;
+        }
         try {
-            // Take the number of driver to be removed from user
-            int x = sc.nextInt();
-            y = x - 1;
-            System.out.println();
-            
-            // Exit back to previous menu
-            if (x == 0) {
-                cstmr.get(cstmr.getSize() - 1).setStatus("pending");
-                return false;
-            }
-            
             // User inputs valid driver number to pick driver
             if (list.contains(y)) {
                 Driver d = drvr.get(y);
@@ -299,10 +299,14 @@ public class App {
                 DT = time.convToFormat(DT);
                 
                 // Set values for later when updating list
-                c.setPickuptime(t1);
-                c.setDropofftime(DT);
-                c.setDay(time.getDay());
+                int z = cstmr.indexOf(c);
+                cstmr.get(z).setPickuptime(t1);
+                cstmr.get(z).setDropofftime(DT);
+                cstmr.get(z).setDay(time.getDay());
                 drvr.get(y).setDropofftime(DT);
+                drvr.get(y).setStatus("not available");
+                drvr.get(y).setDestlat(custlat2);
+                drvr.get(y).setDestlon(custlon2);
                 
                 System.out.println("Driver " + x + " is on the way to pick you up.");
                 
@@ -321,6 +325,7 @@ public class App {
         for (int i = 0; i < cstmr.getSize(); i++) {
             if (cstmr.get(i).getStatus().equals("pending")) {
                 customerViewADrvCheck(time, cstmr, drvr, cstmr.get(i));
+                cstmr.get(i).setStatus("waiting");
             }
         }
     }
@@ -370,7 +375,7 @@ public class App {
     }
     
     // C - Add / Remove Driver
-    public static void driverView(FakeTime time, LinkedList<Driver> drvr) {
+    public static void driverView(FakeTime time, LinkedList<Customer> cstmr, LinkedList<Driver> drvr) {
         Scanner sc = new Scanner(System.in);
         
         while (true) {
@@ -391,7 +396,7 @@ public class App {
             
             if (s.equals("B")) {
                 System.out.println();
-                driverViewB(time, drvr);
+                driverViewB(time, cstmr, drvr);
             }
         }
     }
@@ -448,12 +453,12 @@ public class App {
     }
     
     // CB - Remove driver
-    public static void driverViewB(FakeTime time, LinkedList<Driver> drvr) {
+    public static void driverViewB(FakeTime time, LinkedList<Customer> cstmr, LinkedList<Driver> drvr) {
         Scanner sc = new Scanner(System.in);
         int x;
         
         // List update function needs to be written here                        ~~~~~~
-        long listtime = time.currentTime();
+        long listtime = listUpdate(time, cstmr, drvr);
         
         while(true) {
             // Drivers list
@@ -515,11 +520,45 @@ public class App {
         return distance;
     } */
     
-    /*public static FakeTime driverUpdate() {
+    public static long listUpdate(FakeTime time, LinkedList<Customer> cstmr, LinkedList<Driver> drvr) {
+        for (int i = 0; i < drvr.getSize(); i++) {
+            if (drvr.get(i).getStatus().equals("not available")) {
+                time.currentTime();
+                if (!(drvr.get(i).getDay() > time.getDay())) {
+                    if (time.currentTime() >= drvr.get(i).getDropofftime()) {
+                        drvr.get(i).setStatus("available");
+                        drvr.get(i).setLatitude(drvr.get(i).getDestlat());
+                        drvr.get(i).setLongitude(drvr.get(i).getDestlon());
+                    }
+                }
+                else {
+                    drvr.get(i).setStatus("available");
+                    drvr.get(i).setLatitude(drvr.get(i).getDestlat());
+                    drvr.get(i).setLongitude(drvr.get(i).getDestlon());
+                }
+            }
+        }
         
-    }*/
-    
-    /*public static Faketime customerUpdate() {
+        for (int i = 0; i < cstmr.getSize(); i++) {
+            if (cstmr.get(i).getStatus().equals("waiting")) {
+                time.currentTime();
+                if (!(cstmr.get(i).getDay() > time.getDay())) {
+                    if (time.currentTime() >= cstmr.get(i).getPickuptime() && time.currentTime() < cstmr.get(i).getDropofftime()) {
+                        cstmr.get(i).setStatus("picked up");
+                    }
+                    else if (time.currentTime() >= cstmr.get(i).getDropofftime()) {
+                        cstmr.get(i).setStatus("reached");
+                    }
+                } 
+            }
+            if (cstmr.get(i).getStatus().equals("picked up")) {
+                time.currentTime();
+                if(time.currentTime() >= cstmr.get(i).getDropofftime()) {
+                    cstmr.get(i).setStatus("reached");
+                }
+            }
+        }
         
-    }*/
+        return time.currentTime();
+    }
 }

@@ -10,6 +10,8 @@ public class Driver {
     private double speed = 500; // m/s (m/minute in faketime)
     private double rep;
     private long dropofftime;
+    private int day;
+    private double destlat, destlon;
 
     public Driver() {
     
@@ -110,5 +112,29 @@ public class Driver {
 
     public void setDropofftime(long dropofftime) {
         this.dropofftime = dropofftime;
+    }
+
+    public int getDay() {
+        return day;
+    }
+
+    public void setDay(int day) {
+        this.day = day;
+    }
+
+    public double getDestlat() {
+        return destlat;
+    }
+
+    public void setDestlat(double destlat) {
+        this.destlat = destlat;
+    }
+
+    public double getDestlon() {
+        return destlon;
+    }
+
+    public void setDestlon(double destlon) {
+        this.destlon = destlon;
     }
 }
