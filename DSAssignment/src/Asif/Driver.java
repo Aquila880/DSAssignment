@@ -12,6 +12,9 @@ public class Driver {
     private long dropofftime;
     private int day;
     private double destlat, destlon;
+    // Keep track of reputation sum and total number of ratings
+    private double repsum;
+    private double count = 1;
 
     public Driver() {
     
@@ -27,9 +30,10 @@ public class Driver {
         customer = new Customer();
         customer.setName("-");
         this.rep = 4 + rand.nextDouble();
+        this.repsum = this.rep;
     }
 
-    public Driver(int capacity, double latitude, double longitude, String status, String name, double rep, long dropofftime, int day, double destlat, double destlon) {
+    public Driver(int capacity, double latitude, double longitude, String status, String name, double rep, long dropofftime, int day, double destlat, double destlon, double repsum, double count) {
         this.capacity = capacity;
         this.latitude = latitude;
         this.longitude = longitude;
@@ -42,6 +46,8 @@ public class Driver {
         this.day = day;
         this.destlat = destlat;
         this.destlon = destlon;
+        this.repsum = repsum;
+        this.count = count;
     }
     
     // Print driver information for admin dashboard
@@ -152,5 +158,21 @@ public class Driver {
 
     public void setDestlon(double destlon) {
         this.destlon = destlon;
+    }
+
+    public double getRepsum() {
+        return repsum;
+    }
+
+    public void setRepsum(double repsum) {
+        this.repsum = repsum;
+    }
+
+    public double getCount() {
+        return count;
+    }
+
+    public void setCount(double count) {
+        this.count = count;
     }
 }

@@ -10,7 +10,8 @@ public class Customer {
     private long dropofftime; // the time when the customer reaches their destination
     private double startlatitude, startlongitude;
     private double destlatitude, destlongitude;
-
+    private int driverindex = 100; // Driver's index for updating reputation (extra feature). it is set to 100 so that a customer who hasn't picked a driver
+                                   // doesn't mistakenly rate driver1
     public Customer() {
         
     }
@@ -26,7 +27,7 @@ public class Customer {
         this.destlongitude = destlongitude;
     }
 
-    public Customer(String name, String status, int capacity, int day, long time, long pickuptime, long dropofftime, double startlatitude, double startlongitude, double destlatitude, double destlongitude) {
+    public Customer(String name, String status, int capacity, int day, long time, long pickuptime, long dropofftime, double startlatitude, double startlongitude, double destlatitude, double destlongitude, int driverindex) {
         this.name = name;
         this.status = status;
         this.capacity = capacity;
@@ -38,6 +39,7 @@ public class Customer {
         this.startlongitude = startlongitude;
         this.destlatitude = destlatitude;
         this.destlongitude = destlongitude;
+        this.driverindex = driverindex;
     }
     
     
@@ -229,5 +231,13 @@ public class Customer {
 
     public void setDropofftime(long dropofftime) {
         this.dropofftime = dropofftime;
+    }
+
+    public int getDriverindex() {
+        return driverindex;
+    }
+
+    public void setDriverindex(int driverindex) {
+        this.driverindex = driverindex;
     }
 }

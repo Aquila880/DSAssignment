@@ -32,22 +32,24 @@ public class App {
         LinkedList<Driver> drvr = new LinkedList<>();
         
         // Dashboard check
-        /*cstmr.add(new Customer("Ray", "reached", 1450, 5, 3.1198, 101.6401, 3.1157, 101.6521));
-        cstmr.add(new Customer("John", "picked up", 2215, 5, 3.1368, 101.6400, 3.1325, 101.6304));
+        cstmr.add(new Customer("Ray", "reached", 1450, 5, 3.1198, 101.6401, 3.1157, 101.6521));
+        cstmr.add(new Customer("John", "picked up", 2215, 5, 3.1368, 101.6431, 3.1325, 101.6304));
         cstmr.add(new Customer("Adam", "pending", 1730, 4, 3.1157, 101.6304, 3.1325, 101.6626));
-        cstmr.add(createCustomer("Kobe 1840 5 3.1368 101.6626 3.1134 101.6521"));*/
+        cstmr.add(createCustomer("Kobe 1840 5 3.1368 101.6626 3.1134 101.6521"));
        
         
         
-        /*drvr.add(new Driver("Ralph", "available", 5, 3.1325, 101.6304));
+        drvr.add(new Driver("Ralph", "available", 5, 3.1325, 101.6304));
         drvr.add(new Driver("Alfie", "available", 5, 3.1134, 101.6626));
-        drvr.add(new Driver("Mara", "available", 5, 3.1157, 101.6521));*/
+        drvr.add(new Driver("Mara", "available", 5, 3.1157, 101.6521));
+        
+        // Load info from database
+        drvr = loadDriverData();
+        cstmr = loadCustomerData();
         
         // Main program
         main:
         while(true) {
-            drvr = loadDriverData();
-            cstmr = loadCustomerData();
             String s = homePage(time.currentTime());
         
             // Open menu according to input
@@ -137,6 +139,7 @@ public class App {
             System.out.println("Options :");
             System.out.println("A - Create customer requests");
             System.out.println("B - Update customer requests");
+            System.out.println("C - Rate a driver");
             System.out.print(">> ");
             
             Scanner sc = new Scanner(System.in);
@@ -158,7 +161,12 @@ public class App {
             if (s.equals("B")) {
                 customerViewB(time, cstmr, drvr);
                 break;
-                
+            }
+            
+            // Rate a driver
+            if (s.equals("C")) {
+                customerViewC(time, cstmr, drvr);
+                break;
             }
         }
     }
@@ -292,6 +300,7 @@ public class App {
             cstmr.get(cstmr.getSize() - 1).setStatus("pending");
             return false;
         }
+        
         try {
             // User inputs valid driver number to pick driver
             if (list.contains(y)) {
@@ -313,6 +322,7 @@ public class App {
                 
                 // Set values for later when updating list
                 int z = cstmr.indexOf(c);
+                cstmr.get(z).setDriverindex(y);
                 cstmr.get(z).setPickuptime(t1);
                 cstmr.get(z).setDropofftime(DT);
                 cstmr.get(z).setDay(time.getDay());
@@ -342,6 +352,49 @@ public class App {
                 cstmr.get(i).setStatus("waiting");
             }
         }
+    }
+    
+    // BC - Rate a driver
+    public static boolean customerViewC(FakeTime time, LinkedList<Customer> cstmr, LinkedList<Driver> drvr) {
+        Scanner sc = new Scanner(System.in);
+        
+        // Ask user for customer name
+        System.out.println();
+        System.out.print("Customer name: ");
+        String s = sc.next();
+        
+        // Check if customer name exists in list
+        for (int i = 0; i < cstmr.getSize(); i++) {
+            if (cstmr.get(i).getName().equals(s)) {
+                // Customer has not yet picked a driver. Index is still default value
+                if (cstmr.get(i).getDriverindex() == 100) {
+                    System.out.println("That customer has not yet picked a driver");
+                    return false;
+                }
+                else {
+                    // Let customer rate the driver
+                    double d = -1;
+                    System.out.print("Rate your driver out of 5: ");
+                    while(d < 0 || d > 5) d = sc.nextDouble();
+                    
+                    // Driver index
+                    int j = cstmr.get(i).getDriverindex();
+                    
+                    // Calculate new average
+                    double sum = drvr.get(j).getRepsum() + d;
+                    double count = drvr.get(j).getCount() + 1;
+                    double avg = sum / count;
+                    
+                    // Set new values for the driver
+                    drvr.get(j).setRepsum(sum);
+                    drvr.get(j).setCount(count);
+                    drvr.get(j).setRep(avg);
+                    return true;
+                }
+            }
+        }
+        System.out.println("That customer does not exist");
+        return false;
     }
     
     // These two methods could use some work                                    ~~~~~
@@ -576,6 +629,7 @@ public class App {
         return time.currentTime();
     }
     
+    // Method to clear textfile before writing
     public static void clear(String filename) {
         try {
             FileWriter fwOb = new FileWriter(filename, false); 
@@ -594,7 +648,7 @@ public class App {
             FileWriter myWriter = new FileWriter("D:/Driver.txt");
             // Write the information of each driver line by line
             for (int i = 0; i < drvr.getSize(); i++) {
-                myWriter.write(drvr.get(i).getCapacity() + " " + drvr.get(i).getLatitude() + " " + drvr.get(i).getLongitude() + " " + drvr.get(i).getStatus() + " " + drvr.get(i).getName() + " " + drvr.get(i).getRep() + " " + drvr.get(i).getDropofftime() + " " + drvr.get(i).getDay() + " " + drvr.get(i).getDestlat() + " " + drvr.get(i).getDestlon() + "\n");
+                myWriter.write(drvr.get(i).getCapacity() + " " + drvr.get(i).getLatitude() + " " + drvr.get(i).getLongitude() + " " + drvr.get(i).getStatus() + " " + drvr.get(i).getName() + " " + drvr.get(i).getRep() + " " + drvr.get(i).getDropofftime() + " " + drvr.get(i).getDay() + " " + drvr.get(i).getDestlat() + " " + drvr.get(i).getDestlon() + " " + drvr.get(i).getRepsum() + " " + drvr.get(i).getCount() + "\n");
             }
             myWriter.close();
         } catch (IOException e) {
@@ -608,7 +662,7 @@ public class App {
             FileWriter myWriter = new FileWriter("D:/Customer.txt");
             // Write the information of each customer line by line
             for (int i = 0; i < cstmr.getSize(); i++) {
-                myWriter.write(cstmr.get(i).getName() + " " + cstmr.get(i).getStatus() + " " + cstmr.get(i).getCapacity() + " " + cstmr.get(i).getDay() + " " + cstmr.get(i).getTime() + " " + cstmr.get(i).getPickuptime() + " " + cstmr.get(i).getDropofftime() + " " + cstmr.get(i).getStartlatitude() + " " + cstmr.get(i).getStartlongitude() + " " + cstmr.get(i).getDestlatitude() + " " + cstmr.get(i).getDestlongitude() + "\n");
+                myWriter.write(cstmr.get(i).getName() + " " + cstmr.get(i).getStatus() + " " + cstmr.get(i).getCapacity() + " " + cstmr.get(i).getDay() + " " + cstmr.get(i).getTime() + " " + cstmr.get(i).getPickuptime() + " " + cstmr.get(i).getDropofftime() + " " + cstmr.get(i).getStartlatitude() + " " + cstmr.get(i).getStartlongitude() + " " + cstmr.get(i).getDestlatitude() + " " + cstmr.get(i).getDestlongitude() + " " + cstmr.get(i).getDriverindex() + "\n");
             }
             myWriter.close();
         } catch (IOException e) {
@@ -630,6 +684,8 @@ public class App {
         int day;
         double destlat;
         double destlon;
+        double repsum;
+        double count;
         
         try {
             Scanner sc = new Scanner(new FileInputStream("D:/Driver.txt"));
@@ -648,6 +704,8 @@ public class App {
                     day = Integer.parseInt(s[8]);
                     destlat = Double.parseDouble(s[9]);
                     destlon = Double.parseDouble(s[10]);
+                    repsum = Double.parseDouble(s[11]);
+                    count = Double.parseDouble(s[12]);
                 }
                 else {
                     status = s[3];
@@ -657,9 +715,11 @@ public class App {
                     day = Integer.parseInt(s[7]);
                     destlat = Double.parseDouble(s[8]);
                     destlon = Double.parseDouble(s[9]); 
+                    repsum = Double.parseDouble(s[10]);
+                    count = Double.parseDouble(s[11]);
                 }
                 // Adds driver obj to linked list
-                drvr.add(new Driver(capacity, latitude, longitude, status, name, rep, dropofftime, day, destlat, destlon));
+                drvr.add(new Driver(capacity, latitude, longitude, status, name, rep, dropofftime, day, destlat, destlon, repsum, count));
             }
             sc.close();
         } catch (FileNotFoundException e) {
@@ -680,6 +740,7 @@ public class App {
         long dropofftime; 
         double startlatitude, startlongitude;
         double destlatitude, destlongitude;
+        int driverindex;
         
         try {
            Scanner sc = new Scanner(new FileInputStream("D:/Customer.txt"));
@@ -699,6 +760,7 @@ public class App {
                    startlongitude = Double.parseDouble(s[9]);
                    destlatitude = Double.parseDouble(s[10]);
                    destlongitude = Double.parseDouble(s[11]);
+                   driverindex = Integer.parseInt(s[12]);
                }
                else {
                    status = s[1];
@@ -711,9 +773,10 @@ public class App {
                    startlongitude = Double.parseDouble(s[8]);
                    destlatitude = Double.parseDouble(s[9]);
                    destlongitude = Double.parseDouble(s[10]);
+                   driverindex = Integer.parseInt(s[11]);
                }
                // Adds customer obj to linked list
-               cstmr.add(new Customer(name, status, capacity, day, time, pickuptime, dropofftime, startlatitude, startlongitude, destlatitude, destlongitude));
+               cstmr.add(new Customer(name, status, capacity, day, time, pickuptime, dropofftime, startlatitude, startlongitude, destlatitude, destlongitude, driverindex));
            }
            sc.close();
         } catch (IOException e) {
