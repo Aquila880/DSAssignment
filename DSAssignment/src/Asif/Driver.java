@@ -19,6 +19,7 @@ public class Driver {
     
     public Driver(String name, String status, int capacity, double latitude, double longitude) {
         Random rand = new Random();
+        this.name = name;
         this.status = status;
         this.capacity = capacity;
         this.latitude = latitude;
@@ -26,6 +27,21 @@ public class Driver {
         customer = new Customer();
         customer.setName("-");
         this.rep = 4 + rand.nextDouble();
+    }
+
+    public Driver(int capacity, double latitude, double longitude, String status, String name, double rep, long dropofftime, int day, double destlat, double destlon) {
+        this.capacity = capacity;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        customer = new Customer();
+        customer.setName("-");
+        this.status = status;
+        this.name = name;
+        this.rep = rep;
+        this.dropofftime = dropofftime;
+        this.day = day;
+        this.destlat = destlat;
+        this.destlon = destlon;
     }
     
     // Print driver information for admin dashboard

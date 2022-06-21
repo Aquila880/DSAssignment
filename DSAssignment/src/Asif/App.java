@@ -1,5 +1,7 @@
 package Asif;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.Scanner;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -7,6 +9,9 @@ import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 
 public class App {
     
@@ -34,12 +39,14 @@ public class App {
        
         
         
-        drvr.add(new Driver("Ralph", "available", 5, 3.1325, 101.6304));
-        drvr.add(new Driver("Alfie", "available", 5, 3.1134, 101.6626));
-        drvr.add(new Driver("Mara", "available", 5, 3.1157, 101.6521));
+        // drvr.add(new Driver("Ralph", "available", 5, 3.1325, 101.6304));
+        // drvr.add(new Driver("Alfie", "available", 5, 3.1134, 101.6626));
+        // drvr.add(new Driver("Mara", "available", 5, 3.1157, 101.6521));
         
         // Main program
+        main:
         while(true) {
+            drvr = loadDriverData();
             String s = homePage(time.currentTime());
         
             // Open menu according to input
@@ -58,6 +65,10 @@ public class App {
                 case "C":
                     driverView(time, cstmr, drvr);
                     break;
+                // Exit the program
+                case "exit":
+                    storeDriverData(drvr);
+                    break main;
                 default:
                     System.out.println("Enter A, B or C");
                     break;
@@ -82,7 +93,7 @@ public class App {
             System.out.println("C - Add / Remove Driver\n");
             System.out.print(">> ");
             s = sc.next();
-            if (s.equals("A") || s.equals("B") || s.equals("C"))
+            if (s.equals("A") || s.equals("B") || s.equals("C") || s.equals("exit"))
                 break;
         }
         
@@ -307,6 +318,7 @@ public class App {
                 drvr.get(y).setStatus("not available");
                 drvr.get(y).setDestlat(custlat2);
                 drvr.get(y).setDestlon(custlon2);
+                drvr.get(y).setDay(time.getDay());
                 
                 System.out.println("Driver " + x + " is on the way to pick you up.");
                 
@@ -560,5 +572,83 @@ public class App {
         }
         
         return time.currentTime();
+    }
+    
+    public static void clear() {
+        try {
+            FileWriter fwOb = new FileWriter("D:/Driver.txt", false); 
+            PrintWriter pwOb = new PrintWriter(fwOb, false);
+            pwOb.flush();
+            pwOb.close();
+            fwOb.close();
+        } catch (IOException e) {
+           System.out.println("An error occured");
+        }
+    }
+    
+    public static void storeDriverData(LinkedList<Driver> drvr) {
+        try {
+            clear();
+            FileWriter myWriter = new FileWriter("D:/Driver.txt");
+            for (int i = 0; i < drvr.getSize(); i++) {
+                // not available
+                myWriter.write(drvr.get(i).getCapacity() + " " + drvr.get(i).getLatitude() + " " + drvr.get(i).getLongitude() + " " + drvr.get(i).getStatus() + " " + drvr.get(i).getName() + " " + drvr.get(i).getRep() + " " + drvr.get(i).getDropofftime() + " " + drvr.get(i).getDay() + " " + drvr.get(i).getDestlat() + " " + drvr.get(i).getDestlon() + "\n");
+            }
+            myWriter.close();
+        } catch (IOException e) {
+            System.out.println("An error occurred.");
+        }
+    }
+    
+    public static LinkedList<Driver> loadDriverData() {
+        LinkedList<Driver> drvr = new LinkedList<>();
+        
+        // Driver variables
+        int capacity;
+        double latitude;
+        double longitude;
+        String status;
+        String name;
+        double rep;
+        long dropofftime;
+        int day;
+        double destlat;
+        double destlon;
+        
+        try {
+            Scanner sc = new Scanner(new FileInputStream("D:/Driver.txt"));
+            
+            while(sc.hasNextLine()) {
+                String[] s = sc.nextLine().split(" ");
+                capacity = Integer.parseInt(s[0]);
+                latitude = Double.parseDouble(s[1]);
+                longitude = Double.parseDouble(s[2]);
+                // Since split is " ", special case for not available
+                if (s[3].equals("not")) {
+                    status = "not available";
+                    name = s[5];
+                    rep = Double.parseDouble(s[6]);
+                    dropofftime = Long.parseLong(s[7]);
+                    day = Integer.parseInt(s[8]);
+                    destlat = Double.parseDouble(s[9]);
+                    destlon = Double.parseDouble(s[10]);
+                }
+                else {
+                    status = s[3];
+                    name = s[4];
+                    rep = Double.parseDouble(s[5]);
+                    dropofftime = Long.parseLong(s[6]);
+                    day = Integer.parseInt(s[7]);
+                    destlat = Double.parseDouble(s[8]);
+                    destlon = Double.parseDouble(s[9]); 
+                }
+                // Adds driver obj to linked list
+                drvr.add(new Driver(capacity, latitude, longitude, status, name, rep, dropofftime, day, destlat, destlon));
+            }
+        } catch (FileNotFoundException e) {
+            System.out.println("The file was not found");
+        }
+        
+        return drvr;
     }
 }
