@@ -32,21 +32,22 @@ public class App {
         LinkedList<Driver> drvr = new LinkedList<>();
         
         // Dashboard check
-        // cstmr.add(new Customer("Ray", "reached", 1450, 5, 3.1198, 101.6401, 3.1157, 101.6521));
-        // cstmr.add(new Customer("John", "picked up", 1730, 5, 3.1368, 101.6400, 3.1325, 101.6304));
+        /*cstmr.add(new Customer("Ray", "reached", 1450, 5, 3.1198, 101.6401, 3.1157, 101.6521));
+        cstmr.add(new Customer("John", "picked up", 2215, 5, 3.1368, 101.6400, 3.1325, 101.6304));
         cstmr.add(new Customer("Adam", "pending", 1730, 4, 3.1157, 101.6304, 3.1325, 101.6626));
-        // cstmr.add(createCustomer("Kobe 1840 5 3.1368 101.6626 3.1134 101.6521"));
+        cstmr.add(createCustomer("Kobe 1840 5 3.1368 101.6626 3.1134 101.6521"));*/
        
         
         
-        // drvr.add(new Driver("Ralph", "available", 5, 3.1325, 101.6304));
-        // drvr.add(new Driver("Alfie", "available", 5, 3.1134, 101.6626));
-        // drvr.add(new Driver("Mara", "available", 5, 3.1157, 101.6521));
+        /*drvr.add(new Driver("Ralph", "available", 5, 3.1325, 101.6304));
+        drvr.add(new Driver("Alfie", "available", 5, 3.1134, 101.6626));
+        drvr.add(new Driver("Mara", "available", 5, 3.1157, 101.6521));*/
         
         // Main program
         main:
         while(true) {
             drvr = loadDriverData();
+            cstmr = loadCustomerData();
             String s = homePage(time.currentTime());
         
             // Open menu according to input
@@ -68,6 +69,7 @@ public class App {
                 // Exit the program
                 case "exit":
                     storeDriverData(drvr);
+                    storeCustomerData(cstmr);
                     break main;
                 default:
                     System.out.println("Enter A, B or C");
@@ -574,9 +576,9 @@ public class App {
         return time.currentTime();
     }
     
-    public static void clear() {
+    public static void clear(String filename) {
         try {
-            FileWriter fwOb = new FileWriter("D:/Driver.txt", false); 
+            FileWriter fwOb = new FileWriter(filename, false); 
             PrintWriter pwOb = new PrintWriter(fwOb, false);
             pwOb.flush();
             pwOb.close();
@@ -588,11 +590,25 @@ public class App {
     
     public static void storeDriverData(LinkedList<Driver> drvr) {
         try {
-            clear();
+            clear("D:/Driver.txt");
             FileWriter myWriter = new FileWriter("D:/Driver.txt");
+            // Write the information of each driver line by line
             for (int i = 0; i < drvr.getSize(); i++) {
-                // not available
                 myWriter.write(drvr.get(i).getCapacity() + " " + drvr.get(i).getLatitude() + " " + drvr.get(i).getLongitude() + " " + drvr.get(i).getStatus() + " " + drvr.get(i).getName() + " " + drvr.get(i).getRep() + " " + drvr.get(i).getDropofftime() + " " + drvr.get(i).getDay() + " " + drvr.get(i).getDestlat() + " " + drvr.get(i).getDestlon() + "\n");
+            }
+            myWriter.close();
+        } catch (IOException e) {
+            System.out.println("An error occurred.");
+        }
+    }
+    
+    public static void storeCustomerData(LinkedList<Customer> cstmr) {
+        try {
+            clear("D:/Customer.txt");
+            FileWriter myWriter = new FileWriter("D:/Customer.txt");
+            // Write the information of each customer line by line
+            for (int i = 0; i < cstmr.getSize(); i++) {
+                myWriter.write(cstmr.get(i).getName() + " " + cstmr.get(i).getStatus() + " " + cstmr.get(i).getCapacity() + " " + cstmr.get(i).getDay() + " " + cstmr.get(i).getTime() + " " + cstmr.get(i).getPickuptime() + " " + cstmr.get(i).getDropofftime() + " " + cstmr.get(i).getStartlatitude() + " " + cstmr.get(i).getStartlongitude() + " " + cstmr.get(i).getDestlatitude() + " " + cstmr.get(i).getDestlongitude() + "\n");
             }
             myWriter.close();
         } catch (IOException e) {
@@ -623,7 +639,7 @@ public class App {
                 capacity = Integer.parseInt(s[0]);
                 latitude = Double.parseDouble(s[1]);
                 longitude = Double.parseDouble(s[2]);
-                // Since split is " ", special case for not available
+                // Since split is " ", special case for not available status
                 if (s[3].equals("not")) {
                     status = "not available";
                     name = s[5];
@@ -645,10 +661,65 @@ public class App {
                 // Adds driver obj to linked list
                 drvr.add(new Driver(capacity, latitude, longitude, status, name, rep, dropofftime, day, destlat, destlon));
             }
+            sc.close();
         } catch (FileNotFoundException e) {
             System.out.println("The file was not found");
         }
         
         return drvr;
+    }
+    
+    public static LinkedList<Customer> loadCustomerData() {
+        LinkedList<Customer> cstmr = new LinkedList<>();
+        
+        // Customer variables
+        String name, status;
+        int capacity, day;
+        long time;
+        long pickuptime;
+        long dropofftime; 
+        double startlatitude, startlongitude;
+        double destlatitude, destlongitude;
+        
+        try {
+           Scanner sc = new Scanner(new FileInputStream("D:/Customer.txt"));
+           
+           while (sc.hasNextLine()) {
+               String[] s = sc.nextLine().split(" ");
+               name = s[0];
+               // Since split is " ", special case for picked up status
+               if (s[1].equals("picked")) {
+                   status = "picked up";
+                   capacity = Integer.parseInt(s[3]);
+                   day = Integer.parseInt(s[4]);
+                   time = Long.parseLong(s[5]);
+                   pickuptime = Long.parseLong(s[6]);
+                   dropofftime = Long.parseLong(s[7]);
+                   startlatitude = Double.parseDouble(s[8]);
+                   startlongitude = Double.parseDouble(s[9]);
+                   destlatitude = Double.parseDouble(s[10]);
+                   destlongitude = Double.parseDouble(s[11]);
+               }
+               else {
+                   status = s[1];
+                   capacity = Integer.parseInt(s[2]);
+                   day = Integer.parseInt(s[3]);
+                   time = Long.parseLong(s[4]);
+                   pickuptime = Long.parseLong(s[5]);
+                   dropofftime = Long.parseLong(s[6]);
+                   startlatitude = Double.parseDouble(s[7]);
+                   startlongitude = Double.parseDouble(s[8]);
+                   destlatitude = Double.parseDouble(s[9]);
+                   destlongitude = Double.parseDouble(s[10]);
+               }
+               // Adds customer obj to linked list
+               cstmr.add(new Customer(name, status, capacity, day, time, pickuptime, dropofftime, startlatitude, startlongitude, destlatitude, destlongitude));
+           }
+           sc.close();
+        } catch (IOException e) {
+            System.out.println("The file was not found");
+        }
+        
+        return cstmr;
     }
 }

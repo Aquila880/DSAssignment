@@ -25,6 +25,22 @@ public class Customer {
         this.destlatitude = destlatitude;
         this.destlongitude = destlongitude;
     }
+
+    public Customer(String name, String status, int capacity, int day, long time, long pickuptime, long dropofftime, double startlatitude, double startlongitude, double destlatitude, double destlongitude) {
+        this.name = name;
+        this.status = status;
+        this.capacity = capacity;
+        this.day = day;
+        this.time = time;
+        this.pickuptime = pickuptime;
+        this.dropofftime = dropofftime;
+        this.startlatitude = startlatitude;
+        this.startlongitude = startlongitude;
+        this.destlatitude = destlatitude;
+        this.destlongitude = destlongitude;
+    }
+    
+    
     
     // Print customer information for admin dashboard
     public String dashInfo() {
