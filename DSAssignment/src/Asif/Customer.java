@@ -12,6 +12,8 @@ public class Customer {
     private double destlatitude, destlongitude;
     private int driverindex = 100; // Driver's index for updating reputation (extra feature). it is set to 100 so that a customer who hasn't picked a driver
                                    // doesn't mistakenly rate driver1
+    private boolean premium = false;
+    
     public Customer() {
         
     }
@@ -27,7 +29,7 @@ public class Customer {
         this.destlongitude = destlongitude;
     }
 
-    public Customer(String name, String status, int capacity, int day, long time, long pickuptime, long dropofftime, double startlatitude, double startlongitude, double destlatitude, double destlongitude, int driverindex) {
+    public Customer(String name, String status, int capacity, int day, long time, long pickuptime, long dropofftime, double startlatitude, double startlongitude, double destlatitude, double destlongitude, int driverindex, boolean premium) {
         this.name = name;
         this.status = status;
         this.capacity = capacity;
@@ -40,6 +42,7 @@ public class Customer {
         this.destlatitude = destlatitude;
         this.destlongitude = destlongitude;
         this.driverindex = driverindex;
+        this.premium = premium;
     }
     
     
@@ -239,5 +242,13 @@ public class Customer {
 
     public void setDriverindex(int driverindex) {
         this.driverindex = driverindex;
+    }
+
+    public boolean isPremium() {
+        return premium;
+    }
+
+    public void setPremium(boolean premium) {
+        this.premium = premium;
     }
 }

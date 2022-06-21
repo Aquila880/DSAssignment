@@ -32,7 +32,7 @@ public class App {
         LinkedList<Driver> drvr = new LinkedList<>();
         
         // Dashboard check
-        cstmr.add(new Customer("Ray", "reached", 1450, 5, 3.1198, 101.6401, 3.1157, 101.6521));
+        /*cstmr.add(new Customer("Ray", "reached", 1450, 5, 3.1198, 101.6401, 3.1157, 101.6521));
         cstmr.add(new Customer("John", "picked up", 2215, 5, 3.1368, 101.6431, 3.1325, 101.6304));
         cstmr.add(new Customer("Adam", "pending", 1730, 4, 3.1157, 101.6304, 3.1325, 101.6626));
         cstmr.add(createCustomer("Kobe 1840 5 3.1368 101.6626 3.1134 101.6521"));
@@ -41,7 +41,7 @@ public class App {
         
         drvr.add(new Driver("Ralph", "available", 5, 3.1325, 101.6304));
         drvr.add(new Driver("Alfie", "available", 5, 3.1134, 101.6626));
-        drvr.add(new Driver("Mara", "available", 5, 3.1157, 101.6521));
+        drvr.add(new Driver("Mara", "available", 5, 3.1157, 101.6521));*/
         
         // Load info from database
         drvr = loadDriverData();
@@ -140,6 +140,7 @@ public class App {
             System.out.println("A - Create customer requests");
             System.out.println("B - Update customer requests");
             System.out.println("C - Rate a driver");
+            System.out.println("D - Upgrade to premium");
             System.out.print(">> ");
             
             Scanner sc = new Scanner(System.in);
@@ -165,10 +166,41 @@ public class App {
             
             // Rate a driver
             if (s.equals("C")) {
-                customerViewC(time, cstmr, drvr);
+                customerViewC(cstmr, drvr);
+                break;
+            }
+            
+            // Upgrade to premium
+            if (s.equals("D")) {
+                premium(cstmr, drvr);
                 break;
             }
         }
+    }
+    
+    // BD - Upgrade to premium
+    public static boolean premium(LinkedList<Customer> cstmr, LinkedList<Driver> drvr) {
+        Scanner sc = new Scanner(System.in);
+        
+        // Ask user for customer name
+        System.out.println();
+        System.out.println("You will now be upgraded to the premium service");
+        System.out.println("Premium members get to cut the queue when updating their requests");
+        System.out.println("All you need to do is sell your soul in service to the DEVIL!");
+        System.out.println("Enter your name to continue or \"exit\" to remain a boring simpleton");
+        System.out.print("Customer name: ");
+        String s = sc.next();
+        System.out.println();
+        
+        if (s.equals("exit")) return false;
+        
+        for (int i = 0; i < cstmr.getSize(); i++) {
+            if (cstmr.get(i).getName().equals(s)) {
+                cstmr.get(i).setPremium(true);
+                return true;
+            }
+        }
+        return false;
     }
     
     // BA - Create customer requests
@@ -332,7 +364,7 @@ public class App {
                 drvr.get(y).setDestlon(custlon2);
                 drvr.get(y).setDay(time.getDay());
                 
-                System.out.println("Driver " + x + " is on the way to pick you up.");
+                System.out.println("Driver " + x + " is on the way to pick you up.\n");
                 
                 // Return to prev menu
                 TimeUnit.SECONDS.sleep(1);
@@ -346,16 +378,29 @@ public class App {
     
     // BB - Update customer requests
     public static void customerViewB(FakeTime time, LinkedList<Customer> cstmr, LinkedList<Driver> drvr) {
+        // First, check list for premium customers
         for (int i = 0; i < cstmr.getSize(); i++) {
-            if (cstmr.get(i).getStatus().equals("pending")) {
-                customerViewADrvCheck(time, cstmr, drvr, cstmr.get(i));
-                cstmr.get(i).setStatus("waiting");
+            if (cstmr.get(i).isPremium() == true) {
+                if (cstmr.get(i).getStatus().equals("pending")) {
+                    customerViewADrvCheck(time, cstmr, drvr, cstmr.get(i));
+                    cstmr.get(i).setStatus("waiting");
+                }
+            }
+        }
+        
+        // Then, for regular customers
+        for (int i = 0; i < cstmr.getSize(); i++) {
+            if (cstmr.get(i).isPremium() == false) {
+                if (cstmr.get(i).getStatus().equals("pending")) {
+                    customerViewADrvCheck(time, cstmr, drvr, cstmr.get(i));
+                    cstmr.get(i).setStatus("waiting");
+                }
             }
         }
     }
     
     // BC - Rate a driver
-    public static boolean customerViewC(FakeTime time, LinkedList<Customer> cstmr, LinkedList<Driver> drvr) {
+    public static boolean customerViewC(LinkedList<Customer> cstmr, LinkedList<Driver> drvr) {
         Scanner sc = new Scanner(System.in);
         
         // Ask user for customer name
@@ -389,6 +434,7 @@ public class App {
                     drvr.get(j).setRepsum(sum);
                     drvr.get(j).setCount(count);
                     drvr.get(j).setRep(avg);
+                    System.out.println("Thank you for your rating!");
                     return true;
                 }
             }
@@ -662,7 +708,7 @@ public class App {
             FileWriter myWriter = new FileWriter("D:/Customer.txt");
             // Write the information of each customer line by line
             for (int i = 0; i < cstmr.getSize(); i++) {
-                myWriter.write(cstmr.get(i).getName() + " " + cstmr.get(i).getStatus() + " " + cstmr.get(i).getCapacity() + " " + cstmr.get(i).getDay() + " " + cstmr.get(i).getTime() + " " + cstmr.get(i).getPickuptime() + " " + cstmr.get(i).getDropofftime() + " " + cstmr.get(i).getStartlatitude() + " " + cstmr.get(i).getStartlongitude() + " " + cstmr.get(i).getDestlatitude() + " " + cstmr.get(i).getDestlongitude() + " " + cstmr.get(i).getDriverindex() + "\n");
+                myWriter.write(cstmr.get(i).getName() + " " + cstmr.get(i).getStatus() + " " + cstmr.get(i).getCapacity() + " " + cstmr.get(i).getDay() + " " + cstmr.get(i).getTime() + " " + cstmr.get(i).getPickuptime() + " " + cstmr.get(i).getDropofftime() + " " + cstmr.get(i).getStartlatitude() + " " + cstmr.get(i).getStartlongitude() + " " + cstmr.get(i).getDestlatitude() + " " + cstmr.get(i).getDestlongitude() + " " + cstmr.get(i).getDriverindex() + " " + cstmr.get(i).isPremium() + "\n");
             }
             myWriter.close();
         } catch (IOException e) {
@@ -741,6 +787,7 @@ public class App {
         double startlatitude, startlongitude;
         double destlatitude, destlongitude;
         int driverindex;
+        boolean premium;
         
         try {
            Scanner sc = new Scanner(new FileInputStream("D:/Customer.txt"));
@@ -761,6 +808,7 @@ public class App {
                    destlatitude = Double.parseDouble(s[10]);
                    destlongitude = Double.parseDouble(s[11]);
                    driverindex = Integer.parseInt(s[12]);
+                   premium = Boolean.parseBoolean(s[13]);
                }
                else {
                    status = s[1];
@@ -774,9 +822,10 @@ public class App {
                    destlatitude = Double.parseDouble(s[9]);
                    destlongitude = Double.parseDouble(s[10]);
                    driverindex = Integer.parseInt(s[11]);
+                   premium = Boolean.parseBoolean(s[12]);
                }
                // Adds customer obj to linked list
-               cstmr.add(new Customer(name, status, capacity, day, time, pickuptime, dropofftime, startlatitude, startlongitude, destlatitude, destlongitude, driverindex));
+               cstmr.add(new Customer(name, status, capacity, day, time, pickuptime, dropofftime, startlatitude, startlongitude, destlatitude, destlongitude, driverindex, premium));
            }
            sc.close();
         } catch (IOException e) {
