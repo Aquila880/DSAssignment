@@ -47,7 +47,7 @@ public class App {
         // Load info from database
         drvr = loadDriverData();
         cstmr = loadCustomerData();
-        // time.setDay(loadTime());
+        time.setDay(loadTime());
         
         // Main program
         main:
@@ -697,7 +697,7 @@ public class App {
         }
     }
     
-    /*public static void storeTime(FakeTime time) {
+    public static void storeTime(FakeTime time) {
         try {
             clear("D:/Time.txt");
             FileWriter myWriter = new FileWriter("D:/Time.txt");
@@ -707,7 +707,7 @@ public class App {
         } catch (IOException e) {
             System.out.println("An error occured.");
         }
-    }*/
+    }
     
     public static void storeDriverData(LinkedList<Driver> drvr) {
         try {
@@ -737,7 +737,7 @@ public class App {
         }
     }
     
-    /*public static int loadTime() {
+    public static int loadTime() {
         // Store the day
         int day = 0;
         
@@ -753,7 +753,7 @@ public class App {
         }
         
         return day;
-    }*/
+    }
     
     public static LinkedList<Driver> loadDriverData() {
         LinkedList<Driver> drvr = new LinkedList<>();
