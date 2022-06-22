@@ -45,9 +45,9 @@ public class App {
         drvr.add(new Driver("Mara", "available", 5, 3.1157, 101.6521));*/
         
         // Load info from database
-        /*drvr = loadDriverData();
-        cstmr = loadCustomerData();
-        time.setDay(loadTime());*/
+        // drvr = loadDriverData();
+        // cstmr = loadCustomerData();
+        // time.setDay(loadTime());
         
         // Main program
         main:
@@ -72,9 +72,9 @@ public class App {
                     break;
                 // Exit the program
                 case "exit":
-                    /*storeDriverData(drvr);
-                    storeCustomerData(cstmr);
-                    storeTime(time);*/
+                    // storeDriverData(drvr);
+                    // storeCustomerData(cstmr);
+                    // storeTime(time);
                     break main;
                 default:
                     System.out.println("Enter A, B or C");
@@ -379,7 +379,7 @@ public class App {
                 return false;
             }
         } catch(InterruptedException ex) {
-            
+            System.out.println("There was an interruption");
         }
         return true;
     }
@@ -697,7 +697,7 @@ public class App {
         }
     }
     
-    public static void storeTime(FakeTime time) {
+    /*public static void storeTime(FakeTime time) {
         try {
             clear("D:/Time.txt");
             FileWriter myWriter = new FileWriter("D:/Time.txt");
@@ -707,7 +707,7 @@ public class App {
         } catch (IOException e) {
             System.out.println("An error occured.");
         }
-    }
+    }*/
     
     public static void storeDriverData(LinkedList<Driver> drvr) {
         try {
@@ -737,7 +737,7 @@ public class App {
         }
     }
     
-    public static int loadTime() {
+    /*public static int loadTime() {
         // Store the day
         int day = 0;
         
@@ -753,7 +753,7 @@ public class App {
         }
         
         return day;
-    }
+    }*/
     
     public static LinkedList<Driver> loadDriverData() {
         LinkedList<Driver> drvr = new LinkedList<>();
