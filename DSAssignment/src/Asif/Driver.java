@@ -33,12 +33,12 @@ public class Driver {
         this.repsum = this.rep;
     }
 
-    public Driver(int capacity, double latitude, double longitude, String status, String name, double rep, long dropofftime, int day, double destlat, double destlon, double repsum, double count) {
+    public Driver(int capacity, double latitude, double longitude, String status, String name, double rep, long dropofftime, int day, double destlat, double destlon, double repsum, double count, String custname) {
         this.capacity = capacity;
         this.latitude = latitude;
         this.longitude = longitude;
         customer = new Customer();
-        customer.setName("-");
+        customer.setName(custname);
         this.status = status;
         this.name = name;
         this.rep = rep;

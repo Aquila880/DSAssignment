@@ -112,4 +112,20 @@ public class FakeTime {
     public void setDay(int day) {
         this.day = day;
     }
+
+    public long getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(long startTime) {
+        this.startTime = startTime;
+    }
+
+    public long getRealStartTime() {
+        return realStartTime;
+    }
+
+    public void setRealStartTime(long realStartTime) {
+        this.realStartTime = realStartTime;
+    }
 }

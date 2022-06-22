@@ -46,6 +46,7 @@ public class App {
         // Load info from database
         drvr = loadDriverData();
         cstmr = loadCustomerData();
+        time.setDay(loadTime());
         
         // Main program
         main:
@@ -72,6 +73,7 @@ public class App {
                 case "exit":
                     storeDriverData(drvr);
                     storeCustomerData(cstmr);
+                    storeTime(time);
                     break main;
                 default:
                     System.out.println("Enter A, B or C");
@@ -363,6 +365,7 @@ public class App {
                 drvr.get(y).setDestlat(custlat2);
                 drvr.get(y).setDestlon(custlon2);
                 drvr.get(y).setDay(time.getDay());
+                drvr.get(y).getCustomer().setName(cstmr.get(z).getName());
                 
                 System.out.println("Driver " + x + " is on the way to pick you up.\n");
                 
@@ -642,6 +645,7 @@ public class App {
                         drvr.get(i).setStatus("available");
                         drvr.get(i).setLatitude(drvr.get(i).getDestlat());
                         drvr.get(i).setLongitude(drvr.get(i).getDestlon());
+                        drvr.get(i).getCustomer().setName("-");
                     }
                 }
                 else {
@@ -688,13 +692,25 @@ public class App {
         }
     }
     
+    public static void storeTime(FakeTime time) {
+        try {
+            clear("D:/Time.txt");
+            FileWriter myWriter = new FileWriter("D:/Time.txt");
+            // Write the time information line by line
+            myWriter.write(time.getDay() + " ");
+            myWriter.close();
+        } catch (IOException e) {
+            
+        }
+    }
+    
     public static void storeDriverData(LinkedList<Driver> drvr) {
         try {
             clear("D:/Driver.txt");
             FileWriter myWriter = new FileWriter("D:/Driver.txt");
             // Write the information of each driver line by line
             for (int i = 0; i < drvr.getSize(); i++) {
-                myWriter.write(drvr.get(i).getCapacity() + " " + drvr.get(i).getLatitude() + " " + drvr.get(i).getLongitude() + " " + drvr.get(i).getStatus() + " " + drvr.get(i).getName() + " " + drvr.get(i).getRep() + " " + drvr.get(i).getDropofftime() + " " + drvr.get(i).getDay() + " " + drvr.get(i).getDestlat() + " " + drvr.get(i).getDestlon() + " " + drvr.get(i).getRepsum() + " " + drvr.get(i).getCount() + "\n");
+                myWriter.write(drvr.get(i).getCapacity() + " " + drvr.get(i).getLatitude() + " " + drvr.get(i).getLongitude() + " " + drvr.get(i).getStatus() + " " + drvr.get(i).getName() + " " + drvr.get(i).getRep() + " " + drvr.get(i).getDropofftime() + " " + drvr.get(i).getDay() + " " + drvr.get(i).getDestlat() + " " + drvr.get(i).getDestlon() + " " + drvr.get(i).getRepsum() + " " + drvr.get(i).getCount() + " " + drvr.get(i).getCustomer().getName() + "\n");
             }
             myWriter.close();
         } catch (IOException e) {
@@ -716,6 +732,24 @@ public class App {
         }
     }
     
+    public static int loadTime() {
+        // Store the day
+        int day = 0;
+        
+        try {
+            Scanner sc = new Scanner(new FileInputStream("D:/Time.txt"));
+            
+            while(sc.hasNextLine()) {
+                String[] s = sc.nextLine().split(" ");
+                day = Integer.parseInt(s[0]);
+            }
+        } catch (FileNotFoundException e) {
+            System.out.println("The file was not found");
+        }
+        
+        return day;
+    }
+    
     public static LinkedList<Driver> loadDriverData() {
         LinkedList<Driver> drvr = new LinkedList<>();
         
@@ -732,6 +766,7 @@ public class App {
         double destlon;
         double repsum;
         double count;
+        String custname;
         
         try {
             Scanner sc = new Scanner(new FileInputStream("D:/Driver.txt"));
@@ -752,6 +787,7 @@ public class App {
                     destlon = Double.parseDouble(s[10]);
                     repsum = Double.parseDouble(s[11]);
                     count = Double.parseDouble(s[12]);
+                    custname = s[13];
                 }
                 else {
                     status = s[3];
@@ -763,9 +799,10 @@ public class App {
                     destlon = Double.parseDouble(s[9]); 
                     repsum = Double.parseDouble(s[10]);
                     count = Double.parseDouble(s[11]);
+                    custname = s[12];
                 }
                 // Adds driver obj to linked list
-                drvr.add(new Driver(capacity, latitude, longitude, status, name, rep, dropofftime, day, destlat, destlon, repsum, count));
+                drvr.add(new Driver(capacity, latitude, longitude, status, name, rep, dropofftime, day, destlat, destlon, repsum, count, custname));
             }
             sc.close();
         } catch (FileNotFoundException e) {
