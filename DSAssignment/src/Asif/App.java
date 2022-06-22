@@ -32,7 +32,7 @@ public class App {
         LinkedList<Driver> drvr = new LinkedList<>();
         
         // Dashboard check
-        /*cstmr.add(new Customer("Ray", "reached", 1450, 5, 3.1198, 101.6401, 3.1157, 101.6521));
+        /* cstmr.add(new Customer("Ray", "reached", 1450, 5, 3.1198, 101.6401, 3.1157, 101.6521));
         cstmr.add(new Customer("John", "picked up", 2215, 5, 3.1368, 101.6431, 3.1325, 101.6304));
         cstmr.add(new Customer("Adam", "pending", 1730, 4, 3.1157, 101.6304, 3.1325, 101.6626));
         cstmr.add(createCustomer("Kobe 1840 5 3.1368 101.6626 3.1134 101.6521"));
@@ -42,11 +42,11 @@ public class App {
         
         drvr.add(new Driver("Ralph", "available", 5, 3.1325, 101.6304));
         drvr.add(new Driver("Alfie", "available", 5, 3.1134, 101.6626));
-        drvr.add(new Driver("Mara", "available", 5, 3.1157, 101.6521));*/
+        drvr.add(new Driver("Mara", "available", 5, 3.1157, 101.6521)); */
         
         // Load info from database
-        // drvr = loadDriverData();
-        // cstmr = loadCustomerData();
+        drvr = loadDriverData();
+        cstmr = loadCustomerData();
         // time.setDay(loadTime());
         
         // Main program
@@ -72,8 +72,8 @@ public class App {
                     break;
                 // Exit the program
                 case "exit":
-                    // storeDriverData(drvr);
-                    // storeCustomerData(cstmr);
+                    storeDriverData(drvr);
+                    storeCustomerData(cstmr);
                     // storeTime(time);
                     break main;
                 default:
@@ -778,6 +778,9 @@ public class App {
             
             while(sc.hasNextLine()) {
                 String[] s = sc.nextLine().split(" ");
+                if (s.length <= 10) {
+                   return drvr;
+                }
                 capacity = Integer.parseInt(s[0]);
                 latitude = Double.parseDouble(s[1]);
                 longitude = Double.parseDouble(s[2]);
@@ -836,6 +839,9 @@ public class App {
            
            while (sc.hasNextLine()) {
                String[] s = sc.nextLine().split(" ");
+               if (s.length <= 10) {
+                   return cstmr;
+               }
                name = s[0];
                // Since split is " ", special case for picked up status
                if (s[1].equals("picked")) {
