@@ -36,6 +36,7 @@ public class App {
         cstmr.add(new Customer("John", "picked up", 2215, 5, 3.1368, 101.6431, 3.1325, 101.6304));
         cstmr.add(new Customer("Adam", "pending", 1730, 4, 3.1157, 101.6304, 3.1325, 101.6626));
         cstmr.add(createCustomer("Kobe 1840 5 3.1368 101.6626 3.1134 101.6521"));
+        cstmr.add(new Customer("Alphonse", "pending", 1730, 4, 3.1157, 101.6304, 3.1325, 101.6626));
        
         
         
@@ -44,9 +45,9 @@ public class App {
         drvr.add(new Driver("Mara", "available", 5, 3.1157, 101.6521));*/
         
         // Load info from database
-        drvr = loadDriverData();
+        /*drvr = loadDriverData();
         cstmr = loadCustomerData();
-        time.setDay(loadTime());
+        time.setDay(loadTime());*/
         
         // Main program
         main:
@@ -71,9 +72,9 @@ public class App {
                     break;
                 // Exit the program
                 case "exit":
-                    storeDriverData(drvr);
+                    /*storeDriverData(drvr);
                     storeCustomerData(cstmr);
-                    storeTime(time);
+                    storeTime(time);*/
                     break main;
                 default:
                     System.out.println("Enter A, B or C");
@@ -94,7 +95,7 @@ public class App {
         String s = "";
         
         while (true) {
-            System.out.println("A - View System Dashboad");
+            System.out.println("A - View System Dashboard");
             System.out.println("B - Enter Customer View");
             System.out.println("C - Add / Remove Driver\n");
             System.out.print(">> ");
@@ -234,13 +235,16 @@ public class App {
         System.out.println("The request is received, please choose your driver...");
         System.out.println();
         
-        customerViewADrvCheck(time, cstmr, drvr, c);
+        boolean b = customerViewADrvCheck(time, cstmr, drvr, c);
+        if (b == true) {
+            return false;
+        }
                 
         return true;    
     }
     
     // Show customer driver availability
-    public static void customerViewADrvCheck(FakeTime time, LinkedList<Customer> cstmr, LinkedList<Driver> drvr, Customer c) {
+    public static boolean customerViewADrvCheck(FakeTime time, LinkedList<Customer> cstmr, LinkedList<Driver> drvr, Customer c) {
         // Customer info for checking available drivers
         int capacity = c.getCapacity();
         long EAT = c.getTime();
@@ -255,7 +259,7 @@ public class App {
         double distance;
         long DT;   
         
-        while(true) {
+        
             System.out.println("Driver Availability:");
             // List update function needs to be written here                        ~~~~~~
             long listtime = listUpdate(time, cstmr, drvr);
@@ -295,9 +299,9 @@ public class App {
             }
             boolean b = customerViewADrvPick(time, cstmr, drvr, c, list);
             if (b == false) {
-                break;
+                return true;
             }
-        }  
+        return false; 
     }
     
     // Let customer pick Driver
@@ -356,6 +360,7 @@ public class App {
                 
                 // Set values for later when updating list
                 int z = cstmr.indexOf(c);
+                cstmr.get(z).setStatus("waiting");
                 cstmr.get(z).setDriverindex(y);
                 cstmr.get(z).setPickuptime(t1);
                 cstmr.get(z).setDropofftime(DT);
@@ -688,7 +693,7 @@ public class App {
             pwOb.close();
             fwOb.close();
         } catch (IOException e) {
-           System.out.println("An error occured");
+           System.out.println("An error occured.");
         }
     }
     
@@ -700,7 +705,7 @@ public class App {
             myWriter.write(time.getDay() + " ");
             myWriter.close();
         } catch (IOException e) {
-            
+            System.out.println("An error occured.");
         }
     }
     
