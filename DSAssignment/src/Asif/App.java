@@ -39,7 +39,6 @@ public class App {
         cstmr.add(new Customer("Alphonse", "pending", 1730, 4, 3.1157, 101.6304, 3.1325, 101.6626));
        
         
-        
         drvr.add(new Driver("Ralph", "available", 5, 3.1325, 101.6304));
         drvr.add(new Driver("Alfie", "available", 5, 3.1134, 101.6626));
         drvr.add(new Driver("Mara", "available", 5, 3.1157, 101.6521)); */
@@ -74,7 +73,7 @@ public class App {
                 case "exit":
                     storeDriverData(drvr);
                     storeCustomerData(cstmr);
-                    // storeTime(time);
+                    storeTime(time);
                     break main;
                 default:
                     System.out.println("Enter A, B or C");
@@ -550,7 +549,7 @@ public class App {
             double lat1 = Double.parseDouble(string[2]);
             double lon1 = Double.parseDouble(string[3]);
             
-            if ((lat1 <= 90 && lat1 >= -90) && (lon1 <= 180 && lon1 >= -180)) {
+            if ((lat1 <= 90 && lat1 >= -90) && (lon1 <= 180 && lon1 >= -180)) { // Check if latitude longitude within permissible values
                 return true;
             }
         }
@@ -560,7 +559,7 @@ public class App {
     
     public static Driver createDriver(String s) {
         Driver d;
-        String[] string = s.split(" ");
+        String[] string = s.split(" "); // Split the input into a string array
         
         String name = string[0];
         int capacity = Integer.parseInt(string[1]);
@@ -605,6 +604,7 @@ public class App {
             }
             
             // User inputs valid driver number to be removed
+            // Loop through linked list using driver index to delete
             if (x > 0 && x <= drvr.getSize()) {
                 drvr.remove(x - 1);
                 System.out.println("Driver " + x + " has been removed.");
@@ -711,9 +711,11 @@ public class App {
     
     public static void storeDriverData(LinkedList<Driver> drvr) {
         try {
+            // Clear the text file before writing down list
             clear("D:/Driver.txt");
+            // Open a text file using file writer
             FileWriter myWriter = new FileWriter("D:/Driver.txt");
-            // Write the information of each driver line by line
+            // Write the information of each driver line by line by looping through driver linked list
             for (int i = 0; i < drvr.getSize(); i++) {
                 myWriter.write(drvr.get(i).getCapacity() + " " + drvr.get(i).getLatitude() + " " + drvr.get(i).getLongitude() + " " + drvr.get(i).getStatus() + " " + drvr.get(i).getName() + " " + drvr.get(i).getRep() + " " + drvr.get(i).getDropofftime() + " " + drvr.get(i).getDay() + " " + drvr.get(i).getDestlat() + " " + drvr.get(i).getDestlon() + " " + drvr.get(i).getRepsum() + " " + drvr.get(i).getCount() + " " + drvr.get(i).getCustomer().getName() + "\n");
             }

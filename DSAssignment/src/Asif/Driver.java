@@ -8,11 +8,11 @@ public class Driver {
     private String status, name;
     private Customer customer;
     private double speed = 500; // m/s (m/minute in faketime)
-    private double rep;
+    private double rep; 
     private long dropofftime;
     private int day;
     private double destlat, destlon;
-    // Keep track of reputation sum and total number of ratings
+    // Keep track of reputation sum and total number of ratings to calculate the average
     private double repsum;
     private double count = 1;
 
@@ -20,6 +20,7 @@ public class Driver {
     
     }
     
+    // Creating customer requests
     public Driver(String name, String status, int capacity, double latitude, double longitude) {
         Random rand = new Random();
         this.name = name;
@@ -33,6 +34,7 @@ public class Driver {
         this.repsum = this.rep;
     }
 
+    // Loading from database
     public Driver(int capacity, double latitude, double longitude, String status, String name, double rep, long dropofftime, int day, double destlat, double destlon, double repsum, double count, String custname) {
         this.capacity = capacity;
         this.latitude = latitude;
@@ -52,6 +54,7 @@ public class Driver {
     
     // Print driver information for admin dashboard
     public String dashInfo() {
+        // Check status of driver
         switch(this.getStatus()) {
             case "available" :
                 return this.getStatus() + "      " + this.getCapacity() + "          " + this.getLongitude() + ", " + this.getLatitude()
